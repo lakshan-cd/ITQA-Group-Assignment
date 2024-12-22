@@ -13,6 +13,7 @@ target/
 *.ipr
 .idea/uiDesigner.xml
 .idea/vcs.xml
+.idea/misc.xml
 
 ### Eclipse ###
 .apt_generated
@@ -39,4 +40,4 @@ build/
 ### Mac OS ###
 .DS_Store
 
-### IntelliJ IDEA ###
+allure-2.8.1/
