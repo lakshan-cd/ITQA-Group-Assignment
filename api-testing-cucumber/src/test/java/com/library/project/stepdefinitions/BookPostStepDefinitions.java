@@ -1,5 +1,6 @@
 package com.library.project.stepdefinitions;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.library.project.utils.APIHelper;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -14,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 public class BookPostStepDefinitions {
 
     private final APIHelper apiHelper;
+    private static final String BASEURL = "http://localhost:7081";
 
     public BookPostStepDefinitions(APIHelper apiHelper) {
         this.apiHelper = apiHelper;
@@ -27,7 +29,7 @@ public class BookPostStepDefinitions {
 
     @Given("the API endpoint is {string}")
     public void theApiEndPointIs(String endpoint) {
-        this.endpoint = "http://localhost:7081" + endpoint;
+        this.endpoint = BASEURL + endpoint;
     }
 
     @Given("the request body is:")
@@ -53,6 +55,18 @@ public class BookPostStepDefinitions {
 
     @Then("the response should contain:")
     public void theResponseShouldContain(String expectedResponse) {
-        assertTrue(response.getBody().asString().contains(expectedResponse));
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            // Parse both expected and actual response JSON into objects
+            Object expectedJson = objectMapper.readValue(expectedResponse, Object.class);
+            Object actualJson = objectMapper.readValue(response.getBody().asString(), Object.class);
+
+            // Compare the parsed JSON objects
+            assertEquals(expectedJson, actualJson);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AssertionError("Failed to compare JSON responses");
+        }
     }
 }
