@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('Get all books with authentication', async ({ request }) => {
   const baseUrl = 'http://localhost:7081/api/books';
-  const username = 'user';
+  const username = 'admin';
   const password = 'password';
 
   const base64EncodedCredentials = Buffer.from(`${username}:${password}`).toString('base64');
