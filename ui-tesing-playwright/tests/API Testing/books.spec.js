@@ -20,7 +20,7 @@ test.describe('Book API Tests', () => {
     };
   }
 
-  test.describe('Create Book API Tests', () => {
+  test.describe('Get All Books API Tests', () => {
     test('API Test 01 - Get all books with admin authentication', async ({ request }) => {
       try {
         const headers = await adminAuthenticate(request);
@@ -64,7 +64,7 @@ test.describe('Book API Tests', () => {
  
 
   test.describe('Create Book API Tests', () => {
-    test('API Test 02 - Create a book with authentication - without id', async ({ request }) => {
+    test('API Test 03 - Create a book with authentication - without id', async ({ request }) => {
       const newBook = {
         title: 'IT Faculty',
         author: 'Dean',
@@ -91,7 +91,7 @@ test.describe('Book API Tests', () => {
       }
     });
   
-    test('API Test 03 - Create a book with authentication - with new id', async ({ request }) => {
+    test('API Test 04 - Create a book with authentication - with new id', async ({ request }) => {
       const newBook = {
         id: Math.floor(Math.random() * 100000), // Generate a random ID
         title: 'IT Faculty with new id',
@@ -120,7 +120,7 @@ test.describe('Book API Tests', () => {
       }
     });
 
-    test('API Test 04 - Create a book with authentication - with existing id', async ({ request }) => {
+    test('API Test 05 - Create a book with authentication - with existing id', async ({ request }) => {
       const newBook = {
         id: 1,
         title: 'IT Faculty with new id',
@@ -149,7 +149,7 @@ test.describe('Book API Tests', () => {
       }
     });
 
-    test('API Test 05 - Create a book with authentication - Missing Title', async ({ request }) => {
+    test('API Test 06 - Create a book with authentication - Missing Title', async ({ request }) => {
         const newBook = {
             author: 'Douglas Adams',
         };
@@ -169,7 +169,7 @@ test.describe('Book API Tests', () => {
         }
     });
 
-    test('API Test 06 - Create a book with authentication - Missing Author', async ({ request }) => {
+    test('API Test 07 - Create a book with authentication - Missing Author', async ({ request }) => {
         const newBook = {
             title: 'The Restaurant at the End of the Universe',
         };
