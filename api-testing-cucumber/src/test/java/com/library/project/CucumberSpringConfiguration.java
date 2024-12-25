@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 @CucumberContextConfiguration
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@ContextConfiguration(classes = Main.class, loader = SpringBootContextLoader.class)
+@ContextConfiguration(classes = Main.class)
 public class CucumberSpringConfiguration {
     private static final Logger LOG = LoggerFactory.getLogger(CucumberSpringConfiguration.class);
 
