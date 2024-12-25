@@ -1,7 +1,8 @@
 const { test, expect } = require('@playwright/test');
+const { POManager} = require("../pageobjects/POManager")
 
+test('logging test ', async ({ browser }) => {
 
-test('@initial test', async ({ browser }) => {
     const context = await browser.newContext();
     await context.addCookies([
         {
@@ -11,6 +12,7 @@ test('@initial test', async ({ browser }) => {
             path: '/',
         },
     ]);
+
     const page = await context.newPage();
     await page.goto("https://www.cameralk.com/");
     await page.locator("#myAccountDropdown").click();
@@ -24,3 +26,24 @@ test('@initial test', async ({ browser }) => {
     console.log(`Extracted text: "${textContent}"`);
     await expect(signInElement).not.toHaveText('Sign in / Join Free');
 })
+
+test.only('@initial test', async ({ browser }) => {
+    const context = await browser.newContext();
+    await context.addCookies([
+        {
+            name: 'popup_promotion_seen',
+            value: 'yes',
+            domain: 'www.cameralk.com',
+            path: '/',
+        },
+    ]);
+
+    const page = await context.newPage();
+    const poManager = new POManager(page);
+
+    const loggingPage = poManager.getLoginPage();
+    await loggingPage.goTo();
+    await loggingPage.goToLoggingModal();
+    await loggingPage.submitLogin("nalakasampathsmp@gmail.com", "Sampa@12", true);
+    await loggingPage.checkingNewUser();
+});
