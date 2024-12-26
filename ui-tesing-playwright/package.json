@@ -9,6 +9,7 @@
   "description": "This a simple APIs that created for regiter books in a library system. This system has 5 APIs as post, update, delete and 2 get APIs",
   "devDependencies": {
     "@playwright/test": "^1.49.1",
-    "@types/node": "^22.10.2"
+    "@types/node": "^22.10.2",
+    "allure-playwright": "^3.0.7"
   }
 }

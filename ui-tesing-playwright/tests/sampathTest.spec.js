@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { POManager} = require("../pageobjects/POManager")
 
-test('logging test ', async ({ browser }) => {
+test('@web @sample test ', async ({ browser }) => {
 
     const context = await browser.newContext();
     await context.addCookies([
@@ -27,7 +27,7 @@ test('logging test ', async ({ browser }) => {
     await expect(signInElement).not.toHaveText('Sign in / Join Free');
 })
 
-test.only('@initial test', async ({ browser }) => {
+test('@web  login test', async ({ browser }) => {
     const context = await browser.newContext();
     await context.addCookies([
         {
