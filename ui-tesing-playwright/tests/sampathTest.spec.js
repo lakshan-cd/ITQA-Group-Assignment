@@ -44,6 +44,6 @@ test('@web  login test', async ({ browser }) => {
     const loggingPage = poManager.getLoginPage();
     await loggingPage.goTo();
     await loggingPage.goToLoggingModal();
-    await loggingPage.submitLogin("nalakasampathsmp@gmail.com", "Sampa@12", true);
+    await loggingPage.submitLogin("nalakasampathsmp@gmail.com", "Sampa@12");
     await loggingPage.checkingNewUser();
 });
