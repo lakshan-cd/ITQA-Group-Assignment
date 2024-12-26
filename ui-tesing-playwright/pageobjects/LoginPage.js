@@ -19,8 +19,8 @@ class LoginPage {
     }
 
     async goToLoggingModal() {
-        this.myAccountDropdown.click();
-        this.loggingButton.first().click();
+     await   this.myAccountDropdown.click();
+      await  this.loggingButton.first().click();
     }
 
     async submitLogin(email, password) {
@@ -28,7 +28,7 @@ class LoginPage {
         await this.password.fill(password);
         await this.rememberCheckBox.click();
         await this.loggingSubmitButton.nth(3).click();
-      //  await this.page.waitForLoadState('networkidle');
+    //    await this.page.waitForLoadState('networkidle');
     }
 
     async checkingNewUser() {
