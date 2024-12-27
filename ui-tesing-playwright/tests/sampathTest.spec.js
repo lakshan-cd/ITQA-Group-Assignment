@@ -1,6 +1,26 @@
 const { test, expect } = require('@playwright/test');
 const { POManager} = require("../pageobjects/POManager")
 
+
+
+test.only('@web @sample test1 After selecting a subcategory in the homepage categories, it should navigate to the relevant category and correctly filter the relevant subcategory.', async ({ browser }) => {
+
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto("https://www.hitad.lk/");
+    const product = page.locator(".single-ads-product").nth(3);
+    const categoryName = await product.locator(".title").textContent();
+    const subCategoryName = await product.locator(".n-text").nth(1).textContent();
+    await page.locator(".single-ads-product").nth(3).locator(".n-text").nth(1).click();
+    await expect(page.locator(".breadcrumb a").nth(1)).toHaveText(categoryName);
+    await expect(page.locator(".breadcrumb a").nth(2)).toHaveText(new RegExp(`${subCategoryName}?`, "i"));
+    await expect(page.locator("#pet_categories option[selected]")).toHaveText(new RegExp(`${subCategoryName}?`, 'i'));
+
+})
+
+
+
+
 test('@web @sample test ', async ({ browser }) => {
 
     const context = await browser.newContext();
