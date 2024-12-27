@@ -1,24 +1,44 @@
 const { test, expect } = require('@playwright/test');
-const { POManager} = require("../pageobjects/POManager")
+const { POManager } = require("../pageobjects/POManager")
 
 
 
-test.only('@web @sample test1 After selecting a subcategory in the homepage categories, it should navigate to the relevant category and correctly filter the relevant subcategory.', async ({ browser }) => {
-
+test.only('@web @sample test sdssss ', async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
-    await page.goto("https://www.hitad.lk/");
-    const product = page.locator(".single-ads-product").nth(3);
-    const categoryName = await product.locator(".title").textContent();
-    const subCategoryName = await product.locator(".n-text").nth(1).textContent();
-    await page.locator(".single-ads-product").nth(3).locator(".n-text").nth(1).click();
-    await expect(page.locator(".breadcrumb a").nth(1)).toHaveText(categoryName);
-    await expect(page.locator(".breadcrumb a").nth(2)).toHaveText(new RegExp(`${subCategoryName}?`, "i"));
-    await expect(page.locator("#pet_categories option[selected]")).toHaveText(new RegExp(`${subCategoryName}?`, 'i'));
-
+    await page.goto("https://www.singersl.com/products");
+    await page.locator("#amount-min").fill("300000");
+    await page.locator("#amount-max").fill("400000");
+    await page.locator(".filters .fitler-header").click(); // unfocus the input field
+    
+    const sellingPrices = await page.locator(".selling-price", { hasText: /^RS/i }).allTextContents();
+    const validSellingPrices = sellingPrices.filter(price => price.trim() !== '' && price.trim() !== '0');
+    const cleanedSellingPrices = validSellingPrices.map(price =>
+        parseFloat(price.replace(/(RS\.|,)/g, '').trim())
+    );
+    cleanedSellingPrices.forEach(price => {
+        expect(price).toBeGreaterThanOrEqual(300000);
+        expect(price).toBeLessThanOrEqual(400000);
+    });
 })
 
 
+
+
+// test.only('@web @sample test1 After selecting a subcategory in the homepage categories, it should navigate to the relevant category and correctly filter the relevant subcategory.', async ({ browser }) => {
+
+//     const context = await browser.newContext();
+//     const page = await context.newPage();
+//     await page.goto("https://www.hitad.lk/");
+//     const product = page.locator(".single-ads-product").nth(3);
+//     const categoryName = await product.locator(".title").textContent();
+//     const subCategoryName = await product.locator(".n-text").nth(1).textContent();
+//     await page.locator(".single-ads-product").nth(3).locator(".n-text").nth(1).click();
+//     await expect(page.locator(".breadcrumb a").nth(1)).toHaveText(categoryName);
+//     await expect(page.locator(".breadcrumb a").nth(2)).toHaveText(new RegExp(`${subCategoryName}?`, "i"));
+//     await expect(page.locator("#pet_categories option[selected]")).toHaveText(new RegExp(`${subCategoryName}?`, 'i'));
+//     await page.pause();
+// });
 
 
 test('@web @sample test ', async ({ browser }) => {
