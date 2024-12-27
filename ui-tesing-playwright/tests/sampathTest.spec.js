@@ -3,19 +3,21 @@ const { POManager } = require("../pageobjects/POManager")
 
 
 
-test.only('@web @sample test sdssss ', async ({ browser }) => {
+test('@web @sample test sdssss ', async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto("https://www.singersl.com/products");
     await page.locator("#amount-min").fill("300000");
     await page.locator("#amount-max").fill("400000");
     await page.locator(".filters .fitler-header").click(); // unfocus the input field
-    
+
     const sellingPrices = await page.locator(".selling-price", { hasText: /^RS/i }).allTextContents();
     const validSellingPrices = sellingPrices.filter(price => price.trim() !== '' && price.trim() !== '0');
     const cleanedSellingPrices = validSellingPrices.map(price =>
-        parseFloat(price.replace(/(RS\.|,)/g, '').trim())
+        parseFloat(price.replace(/(RS|Rs\.|,)/g, '').trim())
     );
+
+    console.log(cleanedSellingPrices);
     cleanedSellingPrices.forEach(price => {
         expect(price).toBeGreaterThanOrEqual(300000);
         expect(price).toBeLessThanOrEqual(400000);
@@ -37,9 +39,10 @@ test.only('@web @sample test sdssss ', async ({ browser }) => {
 //     await expect(page.locator(".breadcrumb a").nth(1)).toHaveText(categoryName);
 //     await expect(page.locator(".breadcrumb a").nth(2)).toHaveText(new RegExp(`${subCategoryName}?`, "i"));
 //     await expect(page.locator("#pet_categories option[selected]")).toHaveText(new RegExp(`${subCategoryName}?`, 'i'));
-//     await page.pause();
+
 // });
 
+/*
 
 test('@web @sample test ', async ({ browser }) => {
 
@@ -87,3 +90,6 @@ test('@web  login test', async ({ browser }) => {
     await loggingPage.submitLogin("nalakasampathsmp@gmail.com", "Sampa@12");
     await loggingPage.checkingNewUser();
 });
+
+
+*/
