@@ -2,7 +2,11 @@
   "name": "itqa-group-assignment",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "regression": "npx playwright test",
+    "createReport": "npx playwright test tests/sampathTest.spec.js --project=chromium --reporter=line,allure-playwright",
+    "test": "npx playwright test tests/sampathTest.spec.js --project=chromium"
+  },
   "keywords": [],
   "author": "Hareen Helanjith",
   "license": "ISC",
