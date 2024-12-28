@@ -23,16 +23,16 @@ Feature: Post Books API
     #   """
 
     Examples:
-      | role  | id | title            | author    | statusCode | responseValidation                     |
-      | admin | 51 | Title-01         | Author-01 |        201 | contain the book details               |
-    #   | admin |    | Title-02         | Author-01 |        201 | contain the book details               |
-    #   | admin | 51 | Title-03         | Author-01 |        208 | indicate that the title already exists |
-    #   | admin | 53 | Title-01         | Author-01 |        208 | indicate that the title already exists |
-    #   | admin | 54 |                  | Author-01 |        400 | indicate a missing title error         |
-    #   | admin | 55 | Title-04         |           |        400 | indicate a missing author error        |
-    #   | admin | -1 | The Great Gatsby | Author-01 |        400 | indicate an invalid id error           |
-    #   | admin |  4 | The Great Gatsby | Author-01 |        401 | indicate an unauthorized access error  |
-      | user  | 52 | Title-02         | Author-01 |        201 | contain the book details               |
+      | role  | id   | title     | author    | statusCode | responseValidation       |
+      # | admin |    1 | Title-001 | Author-01 |        201 | contain the book details |
+      # | admin | null | Title-042 | Author-01 |        201 | contain the book details |
+      # | admin | 1 | Title-03         | Author-01 |        208 | indicate that the id already exists |
+      # | admin | 52 | Title-001         | Author-01 |        208 | indicate that the title already exists |
+      # | admin | 54 |                  | Author-01 |        400 | indicate a missing title error         |
+      # | admin | 55 | Title-04         |           |        400 | indicate a missing author error        |
+      # | admin | -1 | The Great Gatsby | Author-01 |        400 | indicate an invalid id error           |
+      # | admis |  4 | The Great Gatsby | Author-01 |        401 | indicate an unauthorized access error  |
+      # | user  | 52 | Title-02         | Author-01 |        201 | contain the book details               |
     #   | user  |    | Title-02         | Author-01 |        201 | contain the book details               |
     #   | user  | 51 | Title-03         | Author-01 |        208 | indicate that the title already exists |
     #   | user  | 53 | Title-01         | Author-01 |        208 | indicate that the title already exists |
