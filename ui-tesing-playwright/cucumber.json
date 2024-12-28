@@ -3,10 +3,10 @@
         "formateOptions": {
             "snippentInterface": "async-await"
         },
-        "paths": ["tests/API Testing/features/get_all_book_api.feature"],
+        "paths": ["tests/API Testing/features/post_api.feature"],
         "publishQuite": true,
         "dryRun": false,
-        "require": ["tests/API Testing/steps/*.ts"],
+        "require": ["tests/API Testing/steps/post_api.ts"],
         "requireModule": ["ts-node/register"]   
     }
   }

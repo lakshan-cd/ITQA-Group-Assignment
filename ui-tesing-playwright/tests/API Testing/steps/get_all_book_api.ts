@@ -15,9 +15,6 @@ Given("I am logged in as {string}", async (role: string) => {
   currentRole = role;
 });
 
-
-
-
 When("I send a GET request to {string}", async (path: string) => {
   response = await requestContext.get(`${baseURL}${path}`, {
     headers: {

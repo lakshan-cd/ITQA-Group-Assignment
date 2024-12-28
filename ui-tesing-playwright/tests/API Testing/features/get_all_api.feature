@@ -4,7 +4,7 @@ Feature: Library API Testing
   Background:
     Given the application is running at "http://localhost:7081"
 
-#   Testing GET method
+# Testing GET method
   Scenario Outline: GET all books for both roles
     Given I am logged in as "<role>"
     When I send a GET request to "/api/books"
