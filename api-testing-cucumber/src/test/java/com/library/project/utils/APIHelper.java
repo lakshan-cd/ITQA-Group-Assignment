@@ -43,4 +43,10 @@ public class APIHelper {
                 .get(endpoint);
     }
 
+    public boolean hasDeletePermission(String role) {
+        return false;
+    }
+
+    public boolean isBookInDatabase(int id) {
+    }
 }
