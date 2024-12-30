@@ -1,10 +1,11 @@
 pipeline {
     agent any
 
-    environment {
+     environment {
         MAVEN_HOME = tool name: 'Maven' // Name of Maven installation in Jenkins
         NODE_HOME = tool name: 'NodeJS' // Name of Node.js installation in Jenkins
-        PATH = "${env.PATH}:${MAVEN_HOME}/bin:${NODE_HOME}/bin"
+        ALLURE_HOME = 'C:\\allure' // Path to Allure installation
+        PATH = "${env.PATH}:${MAVEN_HOME}/bin:${NODE_HOME}/bin;${ALLURE_HOME}\\bin"
     }
 
     stages {
