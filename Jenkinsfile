@@ -35,6 +35,7 @@ pipeline {
             steps {
                 dir('ui-tesing-playwright') {
                     bat 'npm install' // Install dependencies
+                    bat 'npx playwright install'
                     bat 'npx playwright test' // Run Playwright tests
                 }
             }
