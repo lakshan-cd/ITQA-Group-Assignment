@@ -17,7 +17,7 @@ pipeline {
         stage('Run Cucumber Tests') {
             steps {
                 dir('api-testing-cucumber') {
-                    bat 'mvn clean test' // Run Maven tests
+                    bat 'mvn clean test -X' // Run Maven tests
                 }
             }
         }
