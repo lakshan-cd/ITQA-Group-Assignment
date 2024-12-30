@@ -3,7 +3,7 @@ const { POManager } = require("../pageobjects/POManager")
 
 
 
-test.only('@web @sample test sdssss ', async ({ browser }) => {
+test('@web @sample test sdssss ', async ({ browser }) => {
 
     const context = await browser.newContext();
     const page = await context.newPage();
