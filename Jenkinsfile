@@ -26,7 +26,7 @@ pipeline {
         stage('Generate Allure Report for Cucumber') {
             steps {
                 dir('api-testing-cucumber') {
-                    bat 'allure generate --clean target/allure-results -o allure-report'
+                    bat 'mvn allure:report'
                 }
             }
         }
