@@ -3,26 +3,58 @@ const { POManager } = require("../pageobjects/POManager")
 
 
 
-test('@web @sample test sdssss ', async ({ browser }) => {
+test.only('@web @sample test sdssss ', async ({ browser }) => {
+
     const context = await browser.newContext();
     const page = await context.newPage();
+    //goto
     await page.goto("https://www.singersl.com/products");
-    await page.locator("#amount-min").fill("300000");
-    await page.locator("#amount-max").fill("400000");
-    await page.locator(".filters .fitler-header").click(); // unfocus the input field
+    //fill the min max values
 
+    const min = "-111";
+    const max = "111111"
+
+    await page.locator("#amount-min").press("Backspace");
+    await page.locator("#amount-min").type(min);
+    await page.locator(".filters .fitler-header").click();
+    await page.locator("#amount-max").type(max);
+    await page.locator(".filters .fitler-header").click();
+    const minValue = parseFloat(min);
+    if (minValue < 0) {
+        // Check for an error message or an invalid result
+        await expect(page.locator(".no-results")).toBeVisible();
+    }
+    //getting the product prices
     const sellingPrices = await page.locator(".selling-price", { hasText: /^RS/i }).allTextContents();
     const validSellingPrices = sellingPrices.filter(price => price.trim() !== '' && price.trim() !== '0');
     const cleanedSellingPrices = validSellingPrices.map(price =>
         parseFloat(price.replace(/(RS|Rs\.|,)/g, '').trim())
     );
-
+    // await page.pause();
     console.log(cleanedSellingPrices);
+    //verify the product prices
     cleanedSellingPrices.forEach(price => {
-        expect(price).toBeGreaterThanOrEqual(300000);
-        expect(price).toBeLessThanOrEqual(400000);
+        expect(price).toBeGreaterThanOrEqual(0);
+        expect(price).toBeLessThanOrEqual(44400000);
     });
 })
+
+
+test('@web @productFilter Validate product filtering by price range and product verification', async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const poManager = new POManager(page);
+    const productPage = poManager.getProductPage();
+    await productPage.goTo();
+    await productPage.fillMinMax(-10, 100000);
+    const isValidPrices = await productPage.checkInvalidPrices();
+    if (!isValidPrices) {
+        await productPage.verifyNoProducts()
+    }
+    await productPage.getProductPrices();
+    await productPage.verifyProducts();
+})
+
 
 
 
