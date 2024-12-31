@@ -5,7 +5,7 @@ const { POManager } = require("../pageobjects/POManager")
 
 
 
-test.only('@web @productFilter Validate product filtering by price range and product verification', async ({ browser }) => {
+test('@web @productFilter Validate product filtering by price range', async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
     const poManager = new POManager(page);
@@ -21,6 +21,66 @@ test.only('@web @productFilter Validate product filtering by price range and pro
 
 })
 
+test('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist Page', async ({ browser }) => {
+
+    const context = await browser.newContext();
+    await context.addCookies([
+        {
+            name: 'singer_session',
+            value: 'eyJpdiI6IlNqbzZYVEZTZE1uVW1TQmk4eXA3WEE9PSIsInZhbHVlIjoic3hUZXM0M1BRRHRaQlJZdnlYM3prTThuL2dGNGdKbGRJb20xejF3ekt5bkFGOFFGY1pWN0V5S3lOK1Q4bzBtdksyL1d4a2J5Q0xxTDIxY1dISXJ5b1BhVlhKdWk3cGdpVXI2VUhkODJ1YSs0dHNVWjRnaFRaOHhUdmlHNURDamkiLCJtYWMiOiI1M2M3NjBlMmYyOWZkMTVkY2Y3OTlhMmY3NGI5ZmViZjBhOWI4M2ZlOTQ3Y2ZjZTJmNzcyNDEyNzZlMWUwOWIwIiwidGFnIjoiIn0%3D',
+            domain: 'www.singersl.com',
+            path: '/',
+        },
+    ]);
+
+    const page = await context.newPage();
+    await page.goto("https://www.singersl.com/products");
+    const productName = await page.locator(" .product-item h2").nth(3).textContent();
+    await page.locator(".product-item .icon-wishlist").nth(3).click();
+    await page.locator("a:has-text('My Account')").click();
+    await page.locator(".my-wishlist").click();
+    const wishlistProductName = await page.locator(".wishlist-item h3").textContent();
+    expect(wishlistProductName.trim().toLowerCase()).toBe(productName.trim().toLowerCase());
+    await page.locator(".wishlist-item #edit-items-11755-actions-remove").click();
+
+})
+
+test.only('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist Page d', async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto("https://www.singersl.com/products");
+    const buttonShouldBeClick = "Less than 10%";
+    await page.locator(`.facets-widget-singer_offer_checkbox .facet-item label:has-text("${buttonShouldBeClick}")`).click();
+    const productOfferList =   await page.locator(".product-item .offer-percentage").allTextContents();
+    const numericOfferList = productOfferList.map(offer => parseFloat(offer.match(/[\d.]+/)[0]));
+
+
+    switch (buttonShouldBeClick) {
+        case "Less than 10%":
+            expect(numericOfferList.every(offer => offer < 10)).toBeTruthy();
+            break;
+        case "10% or More":
+            expect(numericOfferList.every(offer => offer >= 10)).toBeTruthy();
+            break;
+        case "12% or More":
+            expect(numericOfferList.every(offer => offer >= 12)).toBeTruthy();
+            break;
+        case "15% or More":
+            expect(numericOfferList.every(offer => offer >= 15)).toBeTruthy();
+            break;
+        case "20% or More":
+            expect(numericOfferList.every(offer => offer >= 20)).toBeTruthy();
+            break;
+        case "30% or More":
+            expect(numericOfferList.every(offer => offer >= 30)).toBeTruthy();
+            break;
+        case "50% or More":
+            expect(numericOfferList.every(offer => offer >= 50)).toBeTruthy();
+            break;
+  
+    }
+
+})
 
 
 
