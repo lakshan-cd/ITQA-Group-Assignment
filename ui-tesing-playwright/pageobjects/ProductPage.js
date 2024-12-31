@@ -13,6 +13,7 @@ class ProductPage {
 
     async goTo() {
         await this.page.goto("https://www.singersl.com/products");
+        await this.page.waitForSelector(".product-item");
     }
 
     async fillMinMax(min, max) {

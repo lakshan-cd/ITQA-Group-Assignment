@@ -45,13 +45,13 @@ test('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist
 
 })
 
-test.only('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist Page d', async ({ browser }) => {
+test.only('@web @sample Verify Filtering by Discount Displays Correct Products', async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto("https://www.singersl.com/products");
     const buttonShouldBeClick = "Less than 10%";
     await page.locator(`.facets-widget-singer_offer_checkbox .facet-item label:has-text("${buttonShouldBeClick}")`).click();
-    const productOfferList =   await page.locator(".product-item .offer-percentage").allTextContents();
+    const productOfferList = await page.locator(".product-item .offer-percentage").allTextContents();
     const numericOfferList = productOfferList.map(offer => parseFloat(offer.match(/[\d.]+/)[0]));
 
 
@@ -77,7 +77,7 @@ test.only('@web @sample Verify Product Added to Wishlist is Displayed in the Wis
         case "50% or More":
             expect(numericOfferList.every(offer => offer >= 50)).toBeTruthy();
             break;
-  
+
     }
 
 })
