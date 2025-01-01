@@ -19,7 +19,10 @@ class ProductPage {
         await this.page.goto("https://www.singersl.com/products");
         await this.page.waitForSelector(".product-item");
     }
-
+    async goToElectronicsProducts() {
+        await this.page.goto("https://www.singersl.com/products/electronics");
+        await this.page.waitForSelector(".product-item");
+    }
     async fillMinMax(min, max) {
         await this.minimumInputField.click();
         await this.minimumInputField.press("Control+A");

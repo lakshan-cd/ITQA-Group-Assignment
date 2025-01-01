@@ -1,7 +1,7 @@
 const { Given, When, Then } = require('@cucumber/cucumber');
 const { POManager } = require("../../pageobjects/POManager");
 const playwright = require('@playwright/test');
-
+require('dotenv').config();
 
 Given('User is logged in with valid session cookies', { timeout: 50000 }, async function () {
      const browser = await playwright.chromium.launch({ headless: false });
@@ -9,7 +9,7 @@ Given('User is logged in with valid session cookies', { timeout: 50000 }, async 
     await context.addCookies([
         {
             name: 'singer_session',
-            value: 'eyJpdiI6IkZOWVZDM3NWMXc4eTRBdHRrNnkxUUE9PSIsInZhbHVlIjoidnFnbGRjMDcvSVVTNlFUcTAyVDVkZG9QbFFqMzM5SVZxSmR1ZW5BSExIbXFoeGNMOXJWaWZ3OFljdTJJaXFaTS9UcjUwRWpUTXJLUGlxRTBHeHlQWStWd1d2VmxuS1BWSU04TEZHSGpkMFdaak9DWWRURytrckxnM1ZXRlA3QUEiLCJtYWMiOiJhM2EzMmZjYmIyMzRiMGY4ZmJiNzkyNjBkMThjMDdhY2RiNDRlYzAwMmRhMDRhOTZkM2NhZTZmYTkwMzYzMGUxIiwidGFnIjoiIn0%3D',
+            value: process.env.SINGER_SESSION,
             domain: 'www.singersl.com',
             path: '/',
         },
@@ -19,7 +19,6 @@ Given('User is logged in with valid session cookies', { timeout: 50000 }, async 
         this.productPage = this.poManager.getProductPage();
         await this.productPage.goTo();
 });
-
 
 Given('User navigates to the Product Page', { timeout: 50000 }, async function () {
     await this.productPage.goTo();
