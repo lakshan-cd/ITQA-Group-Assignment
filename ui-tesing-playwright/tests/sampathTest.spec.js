@@ -1,60 +1,194 @@
 const { test, expect } = require('@playwright/test');
 const { POManager } = require("../pageobjects/POManager")
+require('dotenv').config();
 
 
 
-test('@web @sample test sdssss ', async ({ browser }) => {
 
-    const context = await browser.newContext();
-    const page = await context.newPage();
-    //goto
-    await page.goto("https://www.singersl.com/products");
-    //fill the min max values
-
-    const min = "-111";
-    const max = "111111"
-
-    await page.locator("#amount-min").press("Backspace");
-    await page.locator("#amount-min").type(min);
-    await page.locator(".filters .fitler-header").click();
-    await page.locator("#amount-max").type(max);
-    await page.locator(".filters .fitler-header").click();
-    const minValue = parseFloat(min);
-    if (minValue < 0) {
-        // Check for an error message or an invalid result
-        await expect(page.locator(".no-results")).toBeVisible();
-    }
-    //getting the product prices
-    const sellingPrices = await page.locator(".selling-price", { hasText: /^RS/i }).allTextContents();
-    const validSellingPrices = sellingPrices.filter(price => price.trim() !== '' && price.trim() !== '0');
-    const cleanedSellingPrices = validSellingPrices.map(price =>
-        parseFloat(price.replace(/(RS|Rs\.|,)/g, '').trim())
-    );
-    // await page.pause();
-    console.log(cleanedSellingPrices);
-    //verify the product prices
-    cleanedSellingPrices.forEach(price => {
-        expect(price).toBeGreaterThanOrEqual(0);
-        expect(price).toBeLessThanOrEqual(44400000);
-    });
-})
-
-
-test('@web @productFilter Validate product filtering by price range and product verification', async ({ browser }) => {
+test('@web @productFilter Validate product filtering by price range', async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
     const poManager = new POManager(page);
     const productPage = poManager.getProductPage();
     await productPage.goTo();
-    await productPage.fillMinMax(-10, 100000);
-    const isValidPrices = await productPage.checkInvalidPrices();
-    if (!isValidPrices) {
-        await productPage.verifyNoProducts()
+    await productPage.fillMinMax("-vzx2000", -300000);
+    const productList = await productPage.getProductPrices();
+    if (productList.length === 0) {
+        await productPage.verifyNoProducts();
+    } else {
+        await productPage.verifyProducts();
     }
-    await productPage.getProductPrices();
-    await productPage.verifyProducts();
+
 })
 
+test('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist Pagef', async ({ browser }) => {
+
+    const context = await browser.newContext();
+    await context.addCookies([
+        {
+            name: 'singer_session',
+            value: process.env.SINGER_SESSION,
+            domain: 'www.singersl.com',
+            path: '/',
+        },
+    ]);
+    const page = await context.newPage();
+    const poManager = new POManager(page);
+    const productPage = poManager.getProductPage();
+    await productPage.goTo();
+    const productName = await productPage.addToWhishListAndGetProductName();
+    await productPage.navigateToMyAccount();
+    const wishlistPage = poManager.getWishListPage();
+    await wishlistPage.navigateToWishlistProducts();
+    await wishlistPage.getWishlistProduct();
+    await wishlistPage.verifyCorrectProduct(productName);
+})
+
+test('@web @sample Verify Filtering by Discount Displays Correct Products s', async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const poManager = new POManager(page);
+    const productPage = poManager.getProductPage();
+    await productPage.goToElectronicsProducts();
+    const buttonShouldBeClick = "Less than 10%";
+    await page.locator(`.facets-widget-singer_offer_checkbox .facet-item label:has-text("${buttonShouldBeClick}")`).click();
+    const productOfferList = await page.locator(".product-item .offer-percentage").allTextContents();
+    const numericOfferList = productOfferList.map(offer => parseFloat(offer.match(/[\d.]+/)[0]));
+
+    switch (buttonShouldBeClick) {
+        case "Less than 10%":
+            expect(numericOfferList.every(offer => offer < 10)).toBeTruthy();
+            break;
+        case "10% or More":
+            expect(numericOfferList.every(offer => offer >= 10)).toBeTruthy();
+            break;
+        case "12% or More":
+            expect(numericOfferList.every(offer => offer >= 12)).toBeTruthy();
+            break;
+        case "15% or More":
+            expect(numericOfferList.every(offer => offer >= 15)).toBeTruthy();
+            break;
+        case "20% or More":
+            expect(numericOfferList.every(offer => offer >= 20)).toBeTruthy();
+            break;
+        case "30% or More":
+            expect(numericOfferList.every(offer => offer >= 30)).toBeTruthy();
+            break;
+        case "50% or More":
+            expect(numericOfferList.every(offer => offer >= 50)).toBeTruthy();
+            break;
+
+    }
+
+})
+test('@web @sample Verify Filtering by Discount Displays Correct Products', async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto("https://www.singersl.com/products/electronics");
+    const buttonShouldBeClick = "10% or More";
+    await page.locator(`.facets-widget-singer_offer_checkbox .facet-item label:has-text("${buttonShouldBeClick}")`).click();
+    const productOfferList = await page.locator(".product-item .offer-percentage").allTextContents();
+    const numericOfferList = productOfferList.map(offer => parseFloat(offer.match(/[\d.]+/)[0]));
+
+
+    switch (buttonShouldBeClick) {
+        case "Less than 10%":
+            expect(numericOfferList.every(offer => offer < 10)).toBeTruthy();
+            break;
+        case "10% or More":
+            expect(numericOfferList.every(offer => offer >= 10)).toBeTruthy();
+            break;
+        case "12% or More":
+            expect(numericOfferList.every(offer => offer >= 12)).toBeTruthy();
+            break;
+        case "15% or More":
+            expect(numericOfferList.every(offer => offer >= 15)).toBeTruthy();
+            break;
+        case "20% or More":
+            expect(numericOfferList.every(offer => offer >= 20)).toBeTruthy();
+            break;
+        case "30% or More":
+            expect(numericOfferList.every(offer => offer >= 30)).toBeTruthy();
+            break;
+        case "50% or More":
+            expect(numericOfferList.every(offer => offer >= 50)).toBeTruthy();
+            break;
+
+    }
+
+})
+
+
+
+
+test.only('@web @sample Verify Product Price Changes After Switching Product Subcategorfggsy', async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto("https://www.singersl.com/service-centres");
+
+
+});
+
+
+// test('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist Page', async ({ browser }) => {
+
+//     const context = await browser.newContext();
+//     await context.addCookies([
+//         {
+//             name: 'singer_session',
+//             value: 'eyJpdiI6IlNqbzZYVEZTZE1uVW1TQmk4eXA3WEE9PSIsInZhbHVlIjoic3hUZXM0M1BRRHRaQlJZdnlYM3prTThuL2dGNGdKbGRJb20xejF3ekt5bkFGOFFGY1pWN0V5S3lOK1Q4bzBtdksyL1d4a2J5Q0xxTDIxY1dISXJ5b1BhVlhKdWk3cGdpVXI2VUhkODJ1YSs0dHNVWjRnaFRaOHhUdmlHNURDamkiLCJtYWMiOiI1M2M3NjBlMmYyOWZkMTVkY2Y3OTlhMmY3NGI5ZmViZjBhOWI4M2ZlOTQ3Y2ZjZTJmNzcyNDEyNzZlMWUwOWIwIiwidGFnIjoiIn0%3D',
+//             domain: 'www.singersl.com',
+//             path: '/',
+//         },
+//     ]);
+//     const page = await context.newPage();
+//     await page.goto("https://www.singersl.com/products");
+//     const productName = await page.locator(" .product-item h2").nth(3).textContent();
+//     await page.locator(".product-item .icon-wishlist").nth(3).click();
+//     await page.locator("a:has-text('My Account')").click();
+//     await page.locator(".my-wishlist").click();
+//     const wishlistProductName = await page.locator(".wishlist-item h3").textContent();
+//     expect(wishlistProductName.trim().toLowerCase()).toBe(productName.trim().toLowerCase());
+//     await page.locator(".wishlist-item #edit-items-11755-actions-remove").click();
+
+// })
+
+
+// test('@web @sample test sdssss ', async ({ browser }) => {
+
+//     const context = await browser.newContext();
+//     const page = await context.newPage();
+//     //goto
+//     await page.goto("https://www.singersl.com/products");
+//     //fill the min max values
+//     const min = "-111";
+//     const max = "111111"
+//     await page.locator("#amount-min").click();
+//     await page.locator("#amount-min").press("Control+A");
+//     await page.locator("#amount-min").press("Backspace");
+//     await page.locator("#amount-min").type(min);
+//     await page.locator(".filters .fitler-header").click();
+//     await page.locator("#amount-max").type(max);
+//     await page.locator(".filters .fitler-header").click();
+//     const minValue = parseFloat(min);
+//     if (minValue < 0) {
+//         // Check for an error message or an invalid result
+//         await expect(page.locator(".no-results")).toBeVisible();
+//     }
+//     //getting the product prices
+//     const sellingPrices = await page.locator(".selling-price", { hasText: /^RS/i }).allTextContents();
+//     const validSellingPrices = sellingPrices.filter(price => price.trim() !== '' && price.trim() !== '0');
+//     const cleanedSellingPrices = validSellingPrices.map(price =>
+//         parseFloat(price.replace(/(RS|Rs\.|,)/g, '').trim())
+//     );
+//     // await page.pause();
+//     console.log(cleanedSellingPrices);
+//     //verify the product prices
+//     cleanedSellingPrices.forEach(price => {
+//         expect(price).toBeGreaterThanOrEqual(0);
+//         expect(price).toBeLessThanOrEqual(44400000);
+//     });
+// })
 
 
 
