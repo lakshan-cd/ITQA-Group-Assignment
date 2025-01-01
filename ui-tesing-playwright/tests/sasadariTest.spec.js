@@ -48,15 +48,15 @@ test('@web @sample Verify "Exclude Stock Out" Button Displays Only In-Stock Prod
 });
 
 
-// test.only('@web @sample test sdssssddd ', async ({ browser }) => {
-//     const context = await browser.newContext();
-//     const page = await context.newPage();
-//     await page.goto("https://www.singersl.com/product/unic-rice-cooker-28l-1000w-urc28-16e");
-//     const preProductPrice=await page.locator(".selling-price .data").textContent();
-//     await page.locator(".product-variant-anchor").first().click();
-//     const newProductPrice=await page.locator(".selling-price .data").textContent();
-// console.log(preProductPrice,newProductPrice);
+test.only('@web @sample Verify Product Price Changes After Switching Product Subcategory', async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto("https://www.singersl.com/product/unic-rice-cooker-28l-1000w-urc28-16e");
+    const preProductPrice = await page.locator(".selling-price .data").first().textContent();
+    await page.locator(".product-variant-anchor").nth(1).click();
+    await page.waitForTimeout(10000);
+    const newProductPrice = await page.locator(".selling-price .data").first().textContent();
+    console.log(preProductPrice, newProductPrice);
+    expect(preProductPrice).not.toBe(newProductPrice);
 
-
-  
-// });
+});
