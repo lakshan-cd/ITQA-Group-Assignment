@@ -27,7 +27,7 @@ test.only('@web @sample Verify Product Added to Wishlist is Displayed in the Wis
     await context.addCookies([
         {
             name: 'singer_session',
-            value: 'eyJpdiI6ImNWVFppelMwTmJMVW4xQk01Zk1la2c9PSIsInZhbHVlIjoidlpna1pNaXdTN3p4NmZmWWpCOEE5MFo5TEZ6SDJCQWMvYlN3ZEdyUGx5VFMwUDJDMVBlZGJ4L1ZGanRuYVVuQUNUUTNwNkMwZEtkQzZxSHpVT2tIQ002WGx6OGY2Zm5LckNRdlVxeEdMa1hTRk0xbGJ6cnYraVhmenJ6d2owVmEiLCJtYWMiOiI0ZjczNmU4OTQ3MGU1OTRiZGFkNmFkNzY2NmFhNzJiYjg4NmM2OGVkNDdkMmQyMjMwYjY5MTFmM2VjMzg2M2VlIiwidGFnIjoiIn0%3D',
+            value: 'eyJpdiI6IkZOWVZDM3NWMXc4eTRBdHRrNnkxUUE9PSIsInZhbHVlIjoidnFnbGRjMDcvSVVTNlFUcTAyVDVkZG9QbFFqMzM5SVZxSmR1ZW5BSExIbXFoeGNMOXJWaWZ3OFljdTJJaXFaTS9UcjUwRWpUTXJLUGlxRTBHeHlQWStWd1d2VmxuS1BWSU04TEZHSGpkMFdaak9DWWRURytrckxnM1ZXRlA3QUEiLCJtYWMiOiJhM2EzMmZjYmIyMzRiMGY4ZmJiNzkyNjBkMThjMDdhY2RiNDRlYzAwMmRhMDRhOTZkM2NhZTZmYTkwMzYzMGUxIiwidGFnIjoiIn0%3D',
             domain: 'www.singersl.com',
             path: '/',
         },
@@ -42,13 +42,6 @@ test.only('@web @sample Verify Product Added to Wishlist is Displayed in the Wis
     await wishlistPage.navigateToWishlistProducts();
     await wishlistPage.getWishlistProduct();
     await wishlistPage.verifyCorrectProduct(productName);
-
-    await page.pause();
-
-
-
-   
-
 })
 
 
