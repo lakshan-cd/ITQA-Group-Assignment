@@ -21,6 +21,37 @@ test('@web @productFilter Validate product filtering by price range', async ({ b
 
 })
 
+test.only('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist Pagef', async ({ browser }) => {
+
+    const context = await browser.newContext();
+    await context.addCookies([
+        {
+            name: 'singer_session',
+            value: 'eyJpdiI6ImNWVFppelMwTmJMVW4xQk01Zk1la2c9PSIsInZhbHVlIjoidlpna1pNaXdTN3p4NmZmWWpCOEE5MFo5TEZ6SDJCQWMvYlN3ZEdyUGx5VFMwUDJDMVBlZGJ4L1ZGanRuYVVuQUNUUTNwNkMwZEtkQzZxSHpVT2tIQ002WGx6OGY2Zm5LckNRdlVxeEdMa1hTRk0xbGJ6cnYraVhmenJ6d2owVmEiLCJtYWMiOiI0ZjczNmU4OTQ3MGU1OTRiZGFkNmFkNzY2NmFhNzJiYjg4NmM2OGVkNDdkMmQyMjMwYjY5MTFmM2VjMzg2M2VlIiwidGFnIjoiIn0%3D',
+            domain: 'www.singersl.com',
+            path: '/',
+        },
+    ]);
+    const page = await context.newPage();
+    const poManager = new POManager(page);
+    const productPage = poManager.getProductPage();
+    await productPage.goTo();
+    const productName = await productPage.addToWhishListAndGetProductName();
+    await productPage.navigateToMyAccount();
+    const wishlistPage = poManager.getWishListPage();
+    await wishlistPage.navigateToWishlistProducts();
+    await wishlistPage.getWishlistProduct();
+    await wishlistPage.verifyCorrectProduct(productName);
+
+    await page.pause();
+
+
+
+   
+
+})
+
+
 test('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist Page', async ({ browser }) => {
 
     const context = await browser.newContext();
@@ -32,7 +63,6 @@ test('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist
             path: '/',
         },
     ]);
-
     const page = await context.newPage();
     await page.goto("https://www.singersl.com/products");
     const productName = await page.locator(" .product-item h2").nth(3).textContent();
@@ -45,7 +75,7 @@ test('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist
 
 })
 
-test.only('@web @sample Verify Filtering by Discount Displays Correct Products', async ({ browser }) => {
+test('@web @sample Verify Filtering by Discount Displays Correct Products', async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto("https://www.singersl.com/products");
@@ -81,6 +111,8 @@ test.only('@web @sample Verify Filtering by Discount Displays Correct Products',
     }
 
 })
+
+
 
 
 

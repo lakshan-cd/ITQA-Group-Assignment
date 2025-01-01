@@ -8,9 +8,10 @@ Feature: Product Filtering by Price Range
     And If products are found, verify all displayed products fall within the selected price range
 
   Examples:
-    | min     | max    |
-    | 2000    | 300000 |
-    | 0       | 50000  |
-    | 100000  | 200000 |
-    | asf222  | 300000 |
-    | -1000   | 0      |
+    |min|max|
+    | 200000|300000|
+    |0| 50000|
+    |asf222|300000|
+    |-1000|0|
+    |200000|100|
+

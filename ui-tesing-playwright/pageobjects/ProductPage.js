@@ -9,6 +9,10 @@ class ProductPage {
         this.filterHeadline = page.locator(".filters .fitler-header");
         this.productSellingPrices = page.locator(".selling-price", { hasText: /^RS/i });
         this.noResultText = page.locator(".no-results");
+        this.productNameLocator = page.locator(".product-item h2")
+        this.addToWishlistIcon = page.locator(".product-item .icon-wishlist")
+        this.myAccountButton = page.locator("a:has-text('My Account')")
+
     }
 
     async goTo() {
@@ -32,13 +36,12 @@ class ProductPage {
         await this.filterHeadline.click();
     }
     async saveMinMax() {
-        // Fetch raw input values
         const rawMin = await this.minimumInputField.inputValue();
         const rawMax = await this.maximumInputField.inputValue();
         this.inputFieldMin = parseFloat(rawMin.replace(/,/g, ""));
         this.inputFieldMax = parseFloat(rawMax.replace(/,/g, ""));
 
-        console.log("Parsed Min:", this.inputFieldMin, "Parsed Max:", this.inputFieldMax);
+        console.log("Min:", this.inputFieldMin, "Max:", this.inputFieldMax);
     }
     async verifyNoProducts() {
         await expect(this.noResultText).toBeVisible();
@@ -51,7 +54,6 @@ class ProductPage {
             parseFloat(price.replace(/(RS|Rs\.|,)/g, '').trim())
         );
         return this.cleanedSellingPrices;
-      
     }
 
     async verifyProducts() {
@@ -60,6 +62,15 @@ class ProductPage {
             expect(price).toBeLessThanOrEqual(this.inputFieldMax);
         });
     }
- 
+
+    async addToWhishListAndGetProductName() {
+        await this.addToWishlistIcon.nth(3).click();
+        return await this.productNameLocator.nth(3).textContent();
+    }
+
+    async navigateToMyAccount() {
+        await this.myAccountButton.click();
+    }
+
 }
 module.exports = { ProductPage };
