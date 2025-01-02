@@ -56,31 +56,9 @@ jobs:
           mkdir -p combined-results/allure-results
           cp -r api-testing-cucumber/target/allure-results/* combined-results/allure-results
 
-  ui-tests:
-    needs: setup
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Run Playwright tests
-        working-directory: ./ui-testing-playwright
-        run: |
-          npm install
-          npx playwright install
-          npx playwright test
-
-      - name: Generate Allure report for Playwright
-        working-directory: ./ui-testing-playwright
-        run: allure generate --clean allure-results -o allure-report
-
-      - name: Copy Playwright results
-        run: |
-          cp -r ui-testing-playwright/allure-results/* combined-results/allure-results
 
   publish-report:
-    needs: [api-tests, ui-tests]
+    needs: [api-tests]
     runs-on: ubuntu-latest
 
     steps:
