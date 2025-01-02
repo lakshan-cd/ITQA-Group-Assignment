@@ -1,6 +1,6 @@
 const { test, expect } = require("@playwright/test");
 
-test.only("@web @sample test validate product details in cart", async ({
+test("@web @sample test validate product details in cart", async ({
   browser,
 }) => {
   const context = await browser.newContext();
@@ -37,30 +37,53 @@ test.only("@web @sample test validate product details in cart", async ({
   expect(cartPageProductPrice).toBe(cartPageProductPrice);
 
   //...............................................................................................
-  // Step 5: Increase product quantity
-  const initialQuantity = await page
-    .locator(".quantity-input input")
-    .inputValue();
-  console.log("Initial quantity:", initialQuantity);
+  //Step 5: Increase product quantity
+  // const initialQuantity = await page
+  //   .locator(".edit-edit-quantity-1")
+  //   .inputValue();
+  // console.log("Initial quantity:", initialQuantity);
 
-  await page.locator(".qty-add").click(); 
+  // await page.locator(".qty-add").click(); 
 
-  await page.waitForTimeout(1000); 
-  const updatedQuantity = await page
-    .locator(".quantity-input input")
-    .inputValue();
-  console.log("Updated quantity:", updatedQuantity);
+  // await page.waitForTimeout(1000); 
+  // const updatedQuantity = await page
+  //   .locator(".edit-edit-quantity-1")
+  //   .inputValue();
+  // console.log("Updated quantity:", updatedQuantity);
 
  
-  expect(Number(updatedQuantity)).toBe(Number(initialQuantity) + 1);
+  // expect(Number(updatedQuantity)).toBe(Number(initialQuantity) + 1);
 
   
-  const updatedCartPageProductPrice = await page
-    .locator(".product-info-cart-middle .price-selling")
-    .textContent();
-  console.log("Updated cart price:", updatedCartPageProductPrice);
+  // const updatedCartPageProductPrice = await page
+  //   .locator(".product-info-cart-middle h3")
+  //   .textContent();
+  // console.log("Updated cart price:", updatedCartPageProductPrice);
 
   
   
 });
 
+
+test.only("@web @cart test increase quantity in cart", async ({ browser }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto("https://www.singersl.com");
+  await page.locator(".tabs-body .add-to-cart-link").nth(0).click();
+  await page.locator('a:has-text("your cart")').click();
+  const initialQuantity = await page
+    .locator(".mycart-qty input")
+    .inputValue();
+  console.log("Initial Quantity:", initialQuantity);
+  await page.locator(".mycart-qty .qty-add").click();
+  await page.waitForTimeout(1000); 
+
+  const updatedQuantity = await page
+    .locator(".mycart-qty input")
+    .inputValue();
+  console.log("Updated Quantity:", updatedQuantity);
+  expect(Number(updatedQuantity)).toBe(Number(initialQuantity) + 1);
+
+ 
+  await context.close();
+});
