@@ -64,7 +64,7 @@ jobs:
         if: always()
         run: |
           mkdir -p allure-results
-          cp -r api-testing-cucumber/target/allure-results/* allure-results/ || true
+          cp -r api-testing-cucumber/target/allure-reports/* allure-results/ || true
           echo "Combined Results Content:"
           ls -R allure-results/
           echo "Total number of result files:"
