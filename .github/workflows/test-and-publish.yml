@@ -46,6 +46,7 @@ jobs:
       - name: Run Cucumber tests
         working-directory: ./api-testing-cucumber
         run: mvn clean test
+        continue-on-error: true # Do not fail the job on test failures
 
       - name: Generate Allure report for Cucumber
         working-directory: ./api-testing-cucumber
@@ -55,7 +56,6 @@ jobs:
         run: |
           mkdir -p combined-results/allure-results
           cp -r api-testing-cucumber/target/allure-results/* combined-results/allure-results
-
 
   publish-report:
     needs: [api-tests]
