@@ -3,7 +3,7 @@ name: Run Tests and Publish Allure Report
 on:
   push:
     branches:
-      - main
+      - lakshan-2
   pull_request:
 
 jobs:
