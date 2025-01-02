@@ -30,6 +30,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y maven
 
+      - name: Install Allure CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip
+          curl -sLo allure.zip https://github.com/allure-framework/allure2/releases/download/2.23.0/allure-2.23.0.zip
+          sudo unzip allure.zip -d /opt/allure
+          sudo ln -s /opt/allure/allure-2.23.0/bin/allure /usr/local/bin/allure
+          allure --version
+
   api-tests:
     needs: setup
     runs-on: ubuntu-latest
@@ -65,14 +74,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Generate combined Allure report using Maven
-        working-directory: ./api-testing-cucumber
+      - name: Deploy combined Allure report to GitHub Pages
         run: |
-          mvn allure:report
-          cp -r target/site/allure-maven-plugin/* ../combined-results/allure-report
-
-      - name: Prepare report for GitHub Pages
-        run: |
+          allure generate combined-results/allure-results -o combined-results/allure-report
           touch combined-results/allure-report/.nojekyll
 
       - name: Publish to GitHub Pages
