@@ -1,25 +1,21 @@
-package com.library.project.stepdefinitions;
+package org.example.itqaassitgnment.stepdefinitions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.library.project.utils.APIHelper;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import io.restassured.response.Response;
+import org.example.itqaassitgnment.utils.APIHelper;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
 public class BookPostStepDefinitions {
 
-    private final APIHelper apiHelper;
     private static final String BASEURL = "http://localhost:7081";
 
-    public BookPostStepDefinitions(APIHelper apiHelper) {
-        this.apiHelper = apiHelper;
-    }
+    APIHelper apiHelper = new APIHelper();
 
     private String endpoint;
     private String requestBody;
