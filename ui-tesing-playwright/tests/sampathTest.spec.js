@@ -81,54 +81,63 @@ test('@web @sample Verify Filtering by Discount Displays Correct Products s', as
     }
 
 })
-test('@web @sample Verify Filtering by Discount Displays Correct Products', async ({ browser }) => {
+test('@web @sample Verify Comparison Functionality Displays Correct Product Details', async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
-    await page.goto("https://www.singersl.com/products/electronics");
-    const buttonShouldBeClick = "10% or More";
-    await page.locator(`.facets-widget-singer_offer_checkbox .facet-item label:has-text("${buttonShouldBeClick}")`).click();
-    const productOfferList = await page.locator(".product-item .offer-percentage").allTextContents();
-    const numericOfferList = productOfferList.map(offer => parseFloat(offer.match(/[\d.]+/)[0]));
+    await page.goto("https://www.singersl.com/products");
 
-
-    switch (buttonShouldBeClick) {
-        case "Less than 10%":
-            expect(numericOfferList.every(offer => offer < 10)).toBeTruthy();
-            break;
-        case "10% or More":
-            expect(numericOfferList.every(offer => offer >= 10)).toBeTruthy();
-            break;
-        case "12% or More":
-            expect(numericOfferList.every(offer => offer >= 12)).toBeTruthy();
-            break;
-        case "15% or More":
-            expect(numericOfferList.every(offer => offer >= 15)).toBeTruthy();
-            break;
-        case "20% or More":
-            expect(numericOfferList.every(offer => offer >= 20)).toBeTruthy();
-            break;
-        case "30% or More":
-            expect(numericOfferList.every(offer => offer >= 30)).toBeTruthy();
-            break;
-        case "50% or More":
-            expect(numericOfferList.every(offer => offer >= 50)).toBeTruthy();
-            break;
-
+    const getProductDetails = async (index) => {
+        const name = await page.locator(".product-listing-content .product-item h2").nth(index).textContent();
+        const code = await page.locator(".product-listing-content .product-item .sku").nth(index).textContent();
+        const price = await page.locator(".product-listing-content .product-item .selling-price").nth(index).textContent();
+        return { name: name.trim(), code: code.trim(), price: price.replace("RS", "").trim() };
+    };
+    const getProductDetailsInCompare = async (index) => {
+        const name = await page.locator("span h2").nth(index).textContent();
+        const code = await page.locator("span .sku").nth(index).textContent();
+        const price = await page.locator("span .selling-price").nth(index).textContent();
+        return { name: name.trim(), code: code.trim(), price: price.replace("RS", "").trim() };
+    };
+    const addToCompare = async function (index) {
+        await page.locator(".product-item").nth(index).hover().then(async function () {
+            await page.locator(".all_compare_checkbox").nth(index).check();
+        })
+        await page.locator("#comparediv img").nth(index).waitFor({ state: 'visible' });
     }
 
+    const firstProduct = await getProductDetails(0);
+    const secondProduct = await getProductDetails(1);
+    await addToCompare(0);
+    await addToCompare(1);
+
+    await page.locator("#compare-button").click();
+
+    const firstProductInCompare = await getProductDetailsInCompare(0);
+    const secondProductInCompare = await getProductDetailsInCompare(1);
+
+    expect(firstProductInCompare).toEqual(firstProduct);
+    expect(secondProductInCompare).toEqual(secondProduct);
 })
-
-
-
-
-test.only('@web @sample Verify Product Price Changes After Switching Product Subcategorfggsy', async ({ browser }) => {
+test.only('@web @sample Verify Comparison Functionality Displays Correct Product Details S', async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
-    await page.goto("https://www.singersl.com/service-centres");
+    const poManager = new POManager(page);
+    const productPage = poManager.getProductPage();
+    await productPage.goTo();
+    const firstProduct = await productPage.getProductDetails(0);
+    const secondProduct = await productPage.getProductDetails(1);
 
+    await productPage.productAddToCompare(0);
+    await productPage.productAddToCompare(1);
 
-});
+    await productPage.addToCompare();
+    const firstProductCompare = await productPage.getProductDetailsInCompare(0);
+    const secondProductCompare =  await productPage.getProductDetailsInCompare(1);
 
+    expect(firstProductCompare).toEqual(firstProduct);
+    expect(secondProductCompare).toEqual(secondProduct);
+
+})
 
 // test('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist Page', async ({ browser }) => {
 

@@ -12,6 +12,18 @@ class ProductPage {
         this.productNameLocator = page.locator(".product-item h2")
         this.addToWishlistIcon = page.locator(".product-item .icon-wishlist")
         this.myAccountButton = page.locator("a:has-text('My Account')")
+        this.productName = page.locator(".product-listing-content .product-item h2");
+        this.productCode = page.locator(".product-listing-content .product-item .sku");
+        this.productPrice = page.locator(".product-listing-content .product-item .selling-price");
+        this.product = page.locator(".product-item");
+        this.addToCompareCheckBox = page.locator(".all_compare_checkbox");
+        this.compareProductPhoto = page.locator("#comparediv img");
+        this.compareButton = page.locator("#compare-button");
+        this.productNameInCompare = page.locator("span h2");
+        this.productCodeInCompare = page.locator("span .sku");
+        this.productPriceInCompare = page.locator("span .selling-price");
+
+
 
     }
 
@@ -73,6 +85,36 @@ class ProductPage {
 
     async navigateToMyAccount() {
         await this.myAccountButton.click();
+    }
+
+    async getProductDetails (index) {
+        const name = await this.productName.nth(index).textContent();
+        const code = await this.productCode.nth(index).textContent();
+        const price = await this.productPrice.nth(index).textContent();
+        return { name: name.trim(), code: code.trim(), price: price.replace("RS", "").trim() };
+    };
+    async productAddToCompare(index) {
+        await this.product.nth(index).hover().then(async () => {
+            await this.addToCompareCheckBox.nth(index).check();
+        });
+        await this.compareProductPhoto.nth(index).waitFor({ state: 'visible' });
+    }
+    async addToCompare() {
+        await this.compareButton.click();
+    }
+
+    async getProductDetailsInCompare(index) {
+        const name = await this.productNameInCompare.nth(index).textContent();
+        const code = await this.productCodeInCompare.nth(index).textContent();
+        const price = await this.productPriceInCompare.nth(index).textContent();
+        return {
+            name: name.trim(),
+            code: code.trim(),
+            price: price.replace("RS", "").trim(),
+        };
+    }
+    async verifyProductDetails(productData,productDataInCompare) {
+     expect(productData).toEqual(productDataInCompare);
     }
 
 }
