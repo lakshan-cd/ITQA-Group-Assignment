@@ -81,7 +81,7 @@ test('@web @sample Verify Filtering by Discount Displays Correct Products s', as
     }
 
 })
-test.only('@web @sample Verify Comparison Functionality Displays Correct Product Details', async ({ browser }) => {
+test('@web @sample Verify Comparison Functionality Displays Correct Product Details', async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto("https://www.singersl.com/products");
@@ -117,9 +117,27 @@ test.only('@web @sample Verify Comparison Functionality Displays Correct Product
 
     expect(firstProductInCompare).toEqual(firstProduct);
     expect(secondProductInCompare).toEqual(secondProduct);
+})
+test.only('@web @sample Verify Comparison Functionality Displays Correct Product Details S', async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const poManager = new POManager(page);
+    const productPage = poManager.getProductPage();
+    await productPage.goTo();
+    const firstProduct = await productPage.getProductDetails(0);
+    const secondProduct = await productPage.getProductDetails(1);
+
+    await productPage.productAddToCompare(0);
+    await productPage.productAddToCompare(1);
+
+    await productPage.addToCompare();
+    const firstProductCompare = await productPage.getProductDetailsInCompare(0);
+    const secondProductCompare =  await productPage.getProductDetailsInCompare(1);
+
+    expect(firstProductCompare).toEqual(firstProduct);
+    expect(secondProductCompare).toEqual(secondProduct);
 
 })
-
 
 // test('@web @sample Verify Product Added to Wishlist is Displayed in the Wishlist Page', async ({ browser }) => {
 
