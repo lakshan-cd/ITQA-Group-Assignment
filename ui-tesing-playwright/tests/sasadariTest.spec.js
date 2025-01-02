@@ -48,7 +48,7 @@ test('@web @sample Verify "Exclude Stock Out" Button Displays Only In-Stock Prod
 });
 
 
-test.only('@web @sample Verify Product Price Changes After Switching Product Subcategory', async ({ browser }) => {
+test('@web @sample Verify Product Price Changes After Switching Product Subcategory', async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto("https://www.singersl.com/product/unic-rice-cooker-28l-1000w-urc28-16e");
@@ -59,4 +59,21 @@ test.only('@web @sample Verify Product Price Changes After Switching Product Sub
     console.log(preProductPrice, newProductPrice);
     expect(preProductPrice).not.toBe(newProductPrice);
 
+});
+test.only('@web @sample Verify service center agents appearing after searching a city', async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto("https://www.singersl.com/service-centres");
+    const city = "Aluthgama";
+    await page.locator("#edit-address").fill(city);
+    await page.locator("#edit-submit-singer-service-centers").click();
+    const resultAddresses = await page.locator(".service-center-agent .agent-address").allTextContents();
+    console.log("🚀 ~ test.only ~ resultAddresses:", resultAddresses)
+    // check the resultAddresses contains(includes) the city,, no problem the simple letter or no 
+    const allAddressesContainCity = resultAddresses.every((address) =>
+        address.toLowerCase().includes(city.toLowerCase())
+    );
+    console.log("🚀 ~ test.only ~ allAddressesContainCity:", allAddressesContainCity)
+    // Assert that all addresses include the city
+    expect(allAddressesContainCity).toBe(true);
 });
