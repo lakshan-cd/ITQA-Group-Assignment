@@ -36,54 +36,69 @@ test("@web @sample test validate product details in cart", async ({
   expect(cartPageProductName).toBe(cartPageProductName);
   expect(cartPageProductPrice).toBe(cartPageProductPrice);
 
-  //...............................................................................................
-  //Step 5: Increase product quantity
-  // const initialQuantity = await page
-  //   .locator(".edit-edit-quantity-1")
-  //   .inputValue();
-  // console.log("Initial quantity:", initialQuantity);
-
-  // await page.locator(".qty-add").click(); 
-
-  // await page.waitForTimeout(1000); 
-  // const updatedQuantity = await page
-  //   .locator(".edit-edit-quantity-1")
-  //   .inputValue();
-  // console.log("Updated quantity:", updatedQuantity);
-
- 
-  // expect(Number(updatedQuantity)).toBe(Number(initialQuantity) + 1);
-
-  
-  // const updatedCartPageProductPrice = await page
-  //   .locator(".product-info-cart-middle h3")
-  //   .textContent();
-  // console.log("Updated cart price:", updatedCartPageProductPrice);
-
-  
-  
 });
 
+//..........................................................................
 
-test.only("@web @cart test increase quantity in cart", async ({ browser }) => {
+test("@web @cart test increase quantity in cart", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
+
   await page.goto("https://www.singersl.com");
   await page.locator(".tabs-body .add-to-cart-link").nth(0).click();
   await page.locator('a:has-text("your cart")').click();
+
+  
   const initialQuantity = await page
     .locator(".mycart-qty input")
     .inputValue();
   console.log("Initial Quantity:", initialQuantity);
   await page.locator(".mycart-qty .qty-add").click();
-  await page.waitForTimeout(1000); 
+
+ 
+  await page.waitForTimeout(8000); 
 
   const updatedQuantity = await page
     .locator(".mycart-qty input")
     .inputValue();
   console.log("Updated Quantity:", updatedQuantity);
+
   expect(Number(updatedQuantity)).toBe(Number(initialQuantity) + 1);
 
- 
+  // Clean up
+  await context.close();
+});
+//..............................................................................................................
+
+test('@web @sample Verify "Exclude Stock Out" Button Displays Only In-Stock Products', async ({ browser }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto("https://www.singersl.com/brands/asus");
+  await page.locator("label:has-text('Exclude Stock Out')").click();
+  const soldOutProducts = await page.locator(".sold-out").count();
+  expect(soldOutProducts).toBe(0);
+});
+
+//...................................................................................................................
+
+test.only("@web test inquiry form", async ({ browser }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto("https://www.singersl.com");
+
+
+  await page.waitForSelector('div.product-info a[href="https://www.singersl.com/product/singer-rice-cooker-1l"]');
+  await page.click('div.product-info a[href="https://www.singersl.com/product/singer-rice-cooker-1l"]');
+
+
+  await page.waitForSelector('li[role="tab"] a#ui-id-17', { timeout: 5000 }); 
+  await page.click('li[role="tab"] a#ui-id-17');
+  await page.waitForSelector('#tabs-enquiry-4', { timeout: 5000 });
+  const inquiryTabVisible = await page.isVisible('#tabs-enquiry-4');
+  expect(inquiryTabVisible).toBeTruthy();
+  const inquiryText = await page.locator('#tabs-enquiry-4').textContent();
+  expect(inquiryText).toContain("Enquiry"); 
+
+  // Close the browser context
   await context.close();
 });
