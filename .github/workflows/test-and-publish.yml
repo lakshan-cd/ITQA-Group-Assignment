@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - lakshan-2
+      - main
+      - qa-prod
   pull_request:
 
 jobs:
