@@ -63,7 +63,36 @@ jobs:
           fi
           mvn allure:report
 
-      - name: List directories
+      - name: Run Playwright tests
+        working-directory: ./ui-testing-playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps
+          npx cucumber-js --format json:allure-results/results.json
+        continue-on-error: true
+
+      - name: Generate Allure report for Playwright
+        working-directory: ./ui-testing-playwright
+        run: |
+            if [ -d "allure-results" ]; then
+                echo "Allure results directory exists."
+                echo "Contents of allure-results directory:"
+                ls -R allure-results
+            else
+                echo "Allure results directory does not exist."
+            fi
+          allure generate allure-results --clean 
+
+      - name: List directories in UI testing
+        run: |
+          echo "Listing current directory contents:"
+          ls -R .
+          echo "Listing ui-testing-playwright directory contents:"
+          ls -R ./ui-testing-playwright
+          echo "Listing ./ui-testing-playwright/allure-results directory contents:"
+          ls -R ../ui-testing-playwright/allure-results || echo "Allure results directory not found"   
+
+      - name: List directories in API testing
         run: |
           echo "Listing current directory contents:"
           ls -R .
@@ -77,6 +106,7 @@ jobs:
         run: |
           mkdir -p allure-results
           cp -r ./api-testing-cucumber/target/allure-results/* allure-results/ || true
+          cp -r ./ui-testing-playwright/allure-results/* allure-results/ || true
           echo "Combined Results Content:"
           ls -R allure-results/
           echo "Total number of result files:"
