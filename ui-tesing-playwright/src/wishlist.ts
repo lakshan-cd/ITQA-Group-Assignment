@@ -65,7 +65,7 @@ export class AddToWishList {
       .locator(WishlistLocators.PRODUCT_NAME)
       .textContent();
   }
-  public async verifyCorrectProduct() {
+  public async verifyCorrectProduct(): Promise<void> {
     const productName = this.dataStore.getData("productNameAddedToWishlist");
 
     expect(this.wishlistProductName.trim().toLowerCase()).toBe(
