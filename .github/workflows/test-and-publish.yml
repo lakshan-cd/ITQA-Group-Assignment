@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  setup:
+  tests-and-report:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,14 +30,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y maven
 
-  api-tests:
-    needs: setup
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Run API test JAR
         run: |
           java -jar demo-0.0.1-SNAPSHOT.jar &
@@ -49,7 +41,6 @@ jobs:
           mvn clean test
           sleep 10
         continue-on-error: true
-
 
       - name: Generate Allure report for Cucumber
         working-directory: ./api-testing-cucumber
@@ -63,27 +54,18 @@ jobs:
           fi
           if [ -d "target/allure-results" ]; then
             echo "Allure results directory exists."
-          echo "Contents of allure-results directory:"
+            echo "Contents of allure-results directory:"
             ls -R target/allure-results
           else
             echo "Allure results directory does not exist."
           fi
-        
           mvn allure:report
-
-  publish-report:
-    needs: [ api-tests ]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
 
       - name: List directories
         run: |
           echo "Listing current directory contents:"
           ls -R .
-            echo "Listing api-testing-cucumber directory contents:"
+          echo "Listing api-testing-cucumber directory contents:"
           ls -R ./api-testing-cucumber
           echo "Listing ./api-testing-cucumber/target/allure-results directory contents:"
           ls -R ./api-testing-cucumber/target/allure-results || echo "Allure results directory not found"
@@ -114,4 +96,3 @@ jobs:
           publish_dir: ./allure-report
           publish_branch: gh-pages
           force_orphan: true
-
