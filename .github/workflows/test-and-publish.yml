@@ -46,6 +46,19 @@ jobs:
       - name: Run Cucumber tests
         working-directory: ./api-testing-cucumber
         run: mvn clean test
+             sleep 10
+            if [ -d "target" ]; then
+            echo "Target directory exists."
+            echo "Contents of target directory:"
+            ls -R target
+            else
+            echo "Target directory does not exist."
+            fi
+            if [ -d "target/allure-results" ]; then
+            echo "Allure results directory exists."
+            else
+            echo "Allure results directory does not exist."
+            fi
         continue-on-error: true # Do not fail the job on test failures
 
       - name: Generate Allure report for Cucumber
