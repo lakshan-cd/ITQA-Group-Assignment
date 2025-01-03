@@ -1,0 +1,5 @@
+🚀 ~ test.only ~ resultAddresses: [
+  ' ALUTHGAMA ROAD,BATUWANHENA,ELPITIYA. ',
+  ' No 156/1, Aluthgama, Bogamuwa '
+]
+🚀 ~ test.only ~ allAddressesContainCity: true
