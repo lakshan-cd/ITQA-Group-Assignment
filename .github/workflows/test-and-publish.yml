@@ -72,18 +72,28 @@ jobs:
           mvn allure:report
 
   publish-report:
-    needs: [api-tests]
+    needs: [ api-tests ]
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name:
+          Debug: List directories
+        run: |
+          echo "Listing current directory contents:"
+          ls -R .
+          echo "Listing api-testing-cucumber directory contents:"
+          ls -R api-testing-cucumber
+          echo "Listing api-testing-cucumber/target/allure-results directory contents:"
+          ls -R api-testing-cucumber/target/allure-results || echo "Allure results directory not found"
+
       - name: Combine Allure Results
         if: always()
         run: |
           mkdir -p allure-results
-          cp -r api-testing-cucumber/target/allure-results/* allure-results/ || true
+          cp -r ./api-testing-cucumber/target/allure-results/* allure-results/ || true
           echo "Combined Results Content:"
           ls -R allure-results/
           echo "Total number of result files:"
@@ -105,3 +115,4 @@ jobs:
           publish_dir: ./allure-report
           publish_branch: gh-pages
           force_orphan: true
+
