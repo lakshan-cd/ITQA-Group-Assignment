@@ -11,9 +11,9 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME,
-    value = "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm," +
-            "pretty," +
-            "html:target/cucumber-reports/Cucumber.html," +
+    value = "pretty," +
+            "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm," +
+            "html:target/cucumber-reports.html,"+
             "json:target/cucumber-reports/Cucumber.json")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "org.example.itqaassitgnment")
 public class CucumberTest {
