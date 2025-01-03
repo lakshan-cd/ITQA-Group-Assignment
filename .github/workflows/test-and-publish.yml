@@ -79,8 +79,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name:
-          Debug: List directories
+      - name: List directories
         run: |
           echo "Listing current directory contents:"
           ls -R .
