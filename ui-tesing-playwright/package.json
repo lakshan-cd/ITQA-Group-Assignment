@@ -1,23 +1,29 @@
 {
-  "name": "itqa-group-assignment",
+  "name": "ui",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "regression": "npx playwright test",
-    "createReport": "npx playwright test tests/sampathTest.spec.js --project=chromium --reporter=line,allure-playwright",
-    "test": "npx playwright test tests/sampathTest.spec.js --project=chromium"
+    "test": "npx cucumber-js test --format progress",
+    "test:allure": "npx cucumber-js test --format json:allure-results/results.json",
+    "test:cucumber": "cucumber-js test",
+    "allure:generate": "allure generate allure-results --clean",
+    "allure:open": "allure open",
+    "allure-report": "allure generate allure-results --clean && allure open"
   },
   "keywords": [],
-  "author": "Hareen Helanjith",
+  "author": "",
   "license": "ISC",
-  "description": "This a simple APIs that created for regiter books in a library system. This system has 5 APIs as post, update, delete and 2 get APIs",
   "devDependencies": {
-    "@playwright/test": "^1.49.1",
-    "@types/node": "^22.10.2",
-    "allure-playwright": "^3.0.7"
-  },
-  "dependencies": {
     "@cucumber/cucumber": "^11.1.1",
-    "dotenv": "^16.4.7"
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.4",
+    "allure-commandline": "^2.32.0",
+    "allure-cucumberjs": "^3.0.7",
+    "cucumber-html-reporter": "^7.2.0",
+    "dotenv": "^16.4.7",
+    "playwright": "^1.49.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
   }
 }

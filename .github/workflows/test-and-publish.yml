@@ -32,6 +32,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y maven
 
+      - name: Create .env file
+        working-directory: ./ui-tesing-playwright
+        run: |
+          echo "SINGER_SESSION=${{ secrets.SINGER_SESSION }}" > .env
+          echo "HEADLESS=${{ secrets.HEADLESS }}" >> .env    
+
       - name: Run API test JAR
         run: |
           java -jar demo-0.0.1-SNAPSHOT.jar &
@@ -63,7 +69,24 @@ jobs:
           fi
           mvn allure:report
 
-      - name: List directories
+      - name: Run Playwright tests
+        working-directory: ./ui-tesing-playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps
+          npx cucumber-js --format json:allure-results/results.json
+        continue-on-error: true
+
+      - name: Debug List directories in UI testing
+        if: always()
+        run: |
+          echo "Listing current directory contents:"
+          ls -R ui-tesing-playwright/allure-results/
+          echo "Listing ui-testing-playwright directory contents:"
+          echo "Number of frontend result files:"
+          find ui-tesing-playwright/allure-results -type f | wc -l
+
+      - name: List directories in API testing
         run: |
           echo "Listing current directory contents:"
           ls -R .
@@ -77,6 +100,7 @@ jobs:
         run: |
           mkdir -p allure-results
           cp -r ./api-testing-cucumber/target/allure-results/* allure-results/ || true
+          cp -r ./ui-tesing-playwright/allure-results/* allure-results/ || true
           echo "Combined Results Content:"
           ls -R allure-results/
           echo "Total number of result files:"

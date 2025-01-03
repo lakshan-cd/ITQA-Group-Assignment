@@ -1,3 +1,5 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","8654","@web @sample test sdssss","chromium","Fri Dec 27 23:41:43 IST 2024","failed","Fri Dec 27 23:41:51 IST 2024","","sampathTest.spec.js","",""
-"","26637","@initial test","chromium","Thu Dec 26 11:11:37 IST 2024","passed","Thu Dec 26 11:12:04 IST 2024","","sampathTest.spec.js","",""
+"","5339","Verify job listings visibility","","Fri Jan 03 22:07:47 IST 2025","passed","Fri Jan 03 22:07:52 IST 2025","","","",""
+"","11294","Verify Singer.lk link redirection","","Fri Jan 03 22:08:05 IST 2025","broken","Fri Jan 03 22:08:16 IST 2025","","","",""
+"","12217","Apply for IT Operations Assistant job","","Fri Jan 03 22:07:52 IST 2025","broken","Fri Jan 03 22:08:05 IST 2025","","","",""
+"","9474","Verify Career Opportunities page title","","Fri Jan 03 22:07:38 IST 2025","passed","Fri Jan 03 22:07:47 IST 2025","","","",""
