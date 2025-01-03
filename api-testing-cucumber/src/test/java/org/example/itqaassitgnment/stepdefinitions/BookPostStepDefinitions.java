@@ -15,7 +15,7 @@ public class BookPostStepDefinitions {
 
     private static final String BASEURL = "http://localhost:7081";
 
-    APIHelper apiHelper = new APIHelper();
+    APIHelper apiHelper = APIHelper.getInstance();
 
     private String endpoint;
     private String requestBody;
@@ -41,7 +41,11 @@ public class BookPostStepDefinitions {
 
     @When("I send a POST request")
     public void iSendAPostRequest() {
-        response = apiHelper.sendPostRequestWithBasicAuth(endpoint, requestBody, username, password);
+        try {
+            response = apiHelper.sendPostRequestWithBasicAuth(endpoint, requestBody, username, password);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send POST request.");
+        }
     }
 
     @Then("the response status should be {int}")

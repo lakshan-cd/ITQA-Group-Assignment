@@ -1,5 +1,5 @@
+@web @product
 Feature: Product Comparison Management
-
   Scenario: Verify Comparison Functionality Displays Correct Product Details
     Given User is on the Product Page
     When User retrieves details of the products

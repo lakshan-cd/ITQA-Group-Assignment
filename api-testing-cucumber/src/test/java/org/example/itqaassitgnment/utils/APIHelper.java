@@ -6,6 +6,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class APIHelper {
+    private static APIHelper apiHelper;
+
+    public APIHelper() {
+    }
+
+    public static APIHelper getInstance() {
+        if (apiHelper == null) {
+            apiHelper = new APIHelper();
+        }
+        return apiHelper;
+    }
 
     // Method to send a POST request with Basic Authentication
     public Response sendPostRequestWithBasicAuth(String endpoint, String requestBody, String username, String password) {
