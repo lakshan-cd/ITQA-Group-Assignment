@@ -8,10 +8,7 @@ export class ProductComparison {
   private playWrightConfig: PlaywrightConfig;
   private dataStore: DataStore;
   private page: Page = undefined as unknown as Page;
-  private context: BrowserContext = undefined as unknown as BrowserContext;
-  private wishlistProductName: any;
-  private inputFieldMin: any;
-  private inputFieldMax: any;
+
   constructor() {
     this.playWrightConfig = PlaywrightConfig.getInstance();
     this.dataStore = DataStore.getInstance();
@@ -61,10 +58,12 @@ export class ProductComparison {
   }
 
   public async addToCompare(): Promise<void> {
+    await this.page.waitForTimeout(1000);
     await this.page.locator(ProductLocators.COMPARE_BUTTON).click();
   }
 
   public async getProductDetailsInCompare(index: number): Promise<any> {
+    await this.page.waitForTimeout(1000);
     const name: any = await this.page
       .locator(ProductLocators.PRODUCT_NAME_IN_COMPARE)
       .nth(index)
@@ -77,15 +76,19 @@ export class ProductComparison {
       .locator(ProductLocators.PRODUCT_PRICE_IN_COMPARE)
       .nth(index)
       .textContent();
-   await this.page.locator(ProductLocators.COMPARE_CLEAR).click();
-    
+   
+
     return {
       name: name.trim(),
       code: code.trim(),
       price: price.replace("RS", "").trim(),
     };
   }
- public async verifyProductDetails(productData:any, productDataInCompare:any):Promise<any>{
-   expect(productData).toEqual(productDataInCompare);
+  public async verifyProductDetails(
+    productData: any,
+    productDataInCompare: any
+  ): Promise<any> {
+    expect(productData).toEqual(productDataInCompare);
+     await this.page.locator(ProductLocators.COMPARE_CLEAR).click();
   }
 }

@@ -6,11 +6,9 @@ export class PlaywrightConfig {
   private defaultContext: BrowserContext | null = null;
   private page: Page | null = null;
   private baseUrl: string = "https://www.singersl.com";
-
-  // Private constructor to prevent direct instantiation
   private constructor() {}
 
-  // Public method to get the singleton instance
+
   public static getInstance(): PlaywrightConfig {
     if (!PlaywrightConfig.instance) {
       PlaywrightConfig.instance = new PlaywrightConfig();
@@ -18,7 +16,6 @@ export class PlaywrightConfig {
     return PlaywrightConfig.instance;
   }
 
-  // Method to initialize and return the page object
   public async getPage(): Promise<Page> {
     if (!this.browser) {
       const isHeadless = process.env.HEADLESS === "true";
@@ -46,12 +43,9 @@ export class PlaywrightConfig {
       console.log("Launching browser in headless mode:", isHeadless);
       this.browser = await firefox.launch({ headless: isHeadless });
     }
-
-    // Always return a new context
     return await this.browser.newContext();
   }
 
-  // Method to close the browser and clean up resources
   public async closePage(): Promise<void> {
     if (this.page) {
       await this.page.close();
