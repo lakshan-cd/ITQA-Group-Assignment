@@ -1,3 +1,4 @@
+@web @brand
 Feature: Brand Filtering Functionality
 
   Scenario: Verify a brand displays only that brand's products
