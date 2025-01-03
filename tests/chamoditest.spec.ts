@@ -38,12 +38,9 @@ test.describe.only("Career Opportunities Page Tests", () => {
   test('Change the Currency Mode', async ({ page }) => {
     // Locate the currency change button
   const currencyButton = page.locator('#currency-change-select')
-  // Wait for the button to be visible
   await currencyButton.waitFor({ state: 'visible' });
   await expect(currencyButton).toBeVisible();
-  // Ensure the button is enabled
   await expect(currencyButton).toBeEnabled();
-  // Click the currency change button
   await currencyButton.click();
   // Optional: Verify the resulting state (e.g., a dropdown appears or a currency change modal opens)
   const currencyDropdown = page.locator('#currency-change-select')
@@ -52,7 +49,6 @@ test.describe.only("Career Opportunities Page Tests", () => {
 
 
   test('Clicking the Singer.lk button redirects to the Singer.lk website', async ({ page }) => {
-    // Navigate to the initial page
     await page.goto('https://www.singersl.com/'); 
     const singerLink = page.getByRole('link', { name: 'SINGER Sri Lanka' })
     await expect(singerLink).toBeVisible();
