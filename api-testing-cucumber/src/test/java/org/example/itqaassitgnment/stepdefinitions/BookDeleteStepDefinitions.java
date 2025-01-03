@@ -8,6 +8,7 @@ import org.example.itqaassitgnment.utils.APIHelper;
 import org.junit.Assert;
 
 public class BookDeleteStepDefinitions {
+    private static final String BASEURL = "http://localhost:7081";
 
     private Response response;
     private String endpoint;
@@ -18,7 +19,7 @@ public class BookDeleteStepDefinitions {
 
     @Given("api endpoint is {string}")
     public void theApiEndpointIs(String apiEndpoint) {
-        this.endpoint = apiEndpoint;
+        this.endpoint = BASEURL + apiEndpoint;
     }
 
     @Given("Authentication username is {string} and password is {string}")
@@ -29,7 +30,12 @@ public class BookDeleteStepDefinitions {
 
     @When("I send a DELETE request")
     public void iSendADeleteRequest() {
-        response = apiHelper.sendDeleteRequestWithBasicAuth(endpoint, username, password);
+        try {
+            response = apiHelper.sendDeleteRequestWithBasicAuth(endpoint, username, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send DELETE request.");
+        }
     }
 
     @Then("the response status must be {int}")

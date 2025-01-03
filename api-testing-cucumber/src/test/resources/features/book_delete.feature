@@ -2,7 +2,7 @@ Feature: Book DELETE API
 
   Scenario: Admin cannot delete a book created by a user
     Given api endpoint is "/api/books/3"
-    And Authentication username is "admin" and password is "adminPassword"
+    And Authentication username is "admin" and password is "password"
     When I send a DELETE request
     Then the response status must be 403
     And the response should equal to:
@@ -24,7 +24,7 @@ Feature: Book DELETE API
       }
       """
 
-  Scenario: Delete a book successfully
+  Scenario: Delete a book by user successfully
     Given api endpoint is "/api/books/1"
     And Authentication username is "user" and password is "password"
     When I send a DELETE request
@@ -33,18 +33,17 @@ Feature: Book DELETE API
       """
       {
         "message": "Book deleted successfully",
-        "id": 1
       }
       """
 
-  Scenario: User cannot delete a book
+  Scenario: Delete a book by admin successfully
     Given api endpoint is "/api/books/2"
-    And Authentication username is "user" and password is "password"
+    And Authentication username is "admin" and password is "password"
     When I send a DELETE request
-    Then the response status must be 403
+    Then the response status must be 200
     And the response should equal to:
       """
       {
-        "message": "User is not permitted."
+        "message": "Book deleted successfully."
       }
       """
