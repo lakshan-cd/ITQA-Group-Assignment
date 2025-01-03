@@ -81,7 +81,7 @@ jobs:
             else
                 echo "Allure results directory does not exist."
             fi
-          allure generate allure-results --clean 
+            allure generate allure-results --clean
 
       - name: List directories in UI testing
         run: |
