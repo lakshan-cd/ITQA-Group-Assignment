@@ -5,7 +5,7 @@ Feature: Book POST API
     And the request body is:
       """
       {
-        "id": 1,
+        "id": 2,
         "title": "Test1234",
         "author": "Test1"
       }
@@ -16,7 +16,7 @@ Feature: Book POST API
     And the response should contain:
       """
       {
-        "id": 1,
+        "id": 2,
         "title": "Test1234",
         "author": "Test1"
       }

@@ -7,9 +7,7 @@ Feature: Book DELETE API
     Then the response status must be 403
     And the response should equal to:
       """
-      {
-        "message": "User is not permitted."
-      }
+        User is not permitted.
       """
 
   Scenario: User cannot delete a book created by admin
@@ -23,6 +21,21 @@ Feature: Book DELETE API
         "message": "User is not permitted."
       }
       """
+
+  Scenario: Create a book for delete
+    Given api endpoint is "/api/books"
+    And the request is:
+      """
+      {
+        "id": 1,
+        "title": "Test12534",
+        "author": "Test1"
+      }
+      """
+    And Authentication username is "user" and password is "password"
+    When I send POST request
+    Then the response status must be 200
+
 
   Scenario: Delete a book by user successfully
     Given api endpoint is "/api/books/1"
