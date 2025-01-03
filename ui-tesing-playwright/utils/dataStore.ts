@@ -1,7 +1,6 @@
 export class DataStore {
   private static instance: DataStore;
   private data: Record<string, any> = {};
-
   private constructor() {}
 
   // Get the Singleton instance
@@ -12,7 +11,6 @@ export class DataStore {
     return DataStore.instance;
   }
 
-  // Get data by key
   public getData(key: string): any {
     const keys = key.split(".");
     let result: any = this.data;
@@ -21,7 +19,7 @@ export class DataStore {
       if (result && result.hasOwnProperty(k)) {
         result = result[k];
       } else {
-        return undefined; // Return undefined if key path is invalid
+        return undefined; 
       }
     }
     return result;

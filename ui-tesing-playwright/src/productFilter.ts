@@ -1,5 +1,5 @@
 import { PlaywrightConfig } from "../utils/playwright.config";
-import { Page, BrowserContext } from "playwright";
+import { Page } from "playwright";
 import { DataStore } from "../utils/dataStore";
 import { expect } from "@playwright/test";
 import { ProductLocators } from "../locators/product.locator";
@@ -8,10 +8,6 @@ export class ProductFilter {
   private playWrightConfig: PlaywrightConfig;
   private dataStore: DataStore;
   private page: Page = undefined as unknown as Page;
-  private context: BrowserContext = undefined as unknown as BrowserContext;
-  private wishlistProductName: any;
-  private inputFieldMin: any;
-  private inputFieldMax: any;
   constructor() {
     this.playWrightConfig = PlaywrightConfig.getInstance();
     this.dataStore = DataStore.getInstance();
@@ -23,7 +19,7 @@ export class ProductFilter {
     await this.page.waitForTimeout(2000);
   }
 
-  public async fillMinMax(min: any, max: any) {
+  public async fillMinMax(min: any, max: any): Promise<void> {
     await this.page.locator(ProductLocators.MINIMUM_INPUT_FIELD).click();
     await this.page
       .locator(ProductLocators.MINIMUM_INPUT_FIELD)
@@ -34,9 +30,9 @@ export class ProductFilter {
     await this.page
       .locator(ProductLocators.MINIMUM_INPUT_FIELD)
       .type(min.toString());
-      
-      await this.page.locator(ProductLocators.MAXIMUM_INPUT_FIELD).click();
-      await this.page.waitForTimeout(5000);
+
+    await this.page.locator(ProductLocators.MAXIMUM_INPUT_FIELD).click();
+    await this.page.waitForTimeout(5000);
     await this.page
       .locator(ProductLocators.MAXIMUM_INPUT_FIELD)
       .press("Control+A");
@@ -51,24 +47,27 @@ export class ProductFilter {
     await this.page.locator(ProductLocators.FILTER_HEADLINE).click();
   }
 
-  public async saveMinMax() {
+  public async saveMinMax(): Promise<void> {
     const rawMin = await this.page
       .locator(ProductLocators.MINIMUM_INPUT_FIELD)
       .inputValue();
     const rawMax = await this.page
       .locator(ProductLocators.MAXIMUM_INPUT_FIELD)
       .inputValue();
-    this.inputFieldMin = parseFloat(rawMin.replace(/,/g, ""));
-    this.inputFieldMax = parseFloat(rawMax.replace(/,/g, ""));
 
-    console.log("Min:", this.inputFieldMin, "Max:", this.inputFieldMax);
+    const inputFieldMin = parseFloat(rawMin.replace(/,/g, ""));
+    const inputFieldMax = parseFloat(rawMax.replace(/,/g, ""));
+
+    this.dataStore.setData("inputFieldMin", inputFieldMin);
+    this.dataStore.setData("inputFieldMax", inputFieldMax);
+    console.log("Min:", inputFieldMin, "Max:", inputFieldMax);
   }
 
   public async getProductPrices(): Promise<any[]> {
-      await this.page.waitForTimeout(5000);
+    await this.page.waitForTimeout(5000);
     const sellingPrices = await this.page
-    .locator(ProductLocators.PRODUCT_SELLING_PRICES, { hasText: /^RS/i })
-    .allTextContents();
+      .locator(ProductLocators.PRODUCT_SELLING_PRICES, { hasText: /^RS/i })
+      .allTextContents();
     const validSellingPrices = sellingPrices.filter(
       (price) => price.trim() !== "" && price.trim() !== "0"
     );
@@ -86,11 +85,16 @@ export class ProductFilter {
     ).toBeVisible();
   }
 
-  public async verifyProducts() :Promise <void> {
-   const productSellingPrices= this.dataStore.getData("productSellingPrices");
+  public async verifyProducts(): Promise<void> {
+    const productSellingPrices = this.dataStore.getData("productSellingPrices");
+
     productSellingPrices.forEach((price: any) => {
-      expect(price).toBeGreaterThanOrEqual(this.inputFieldMin);
-      expect(price).toBeLessThanOrEqual(this.inputFieldMax);
+      expect(price).toBeGreaterThanOrEqual(
+        this.dataStore.getData("inputFieldMin")
+      );
+      expect(price).toBeLessThanOrEqual(
+        this.dataStore.getData("inputFieldMax")
+      );
     });
   }
 }
