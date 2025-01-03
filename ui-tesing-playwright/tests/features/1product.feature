@@ -1,3 +1,4 @@
+@web @product
 Feature: Product Filtering by Price Range
 
   Scenario Outline: Validate product filtering by price range
