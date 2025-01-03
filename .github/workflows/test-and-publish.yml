@@ -1,0 +1,100 @@
+name: Run Tests and Publish Allure Report
+
+on:
+  push:
+    branches:
+      - lakshan-2
+      - main
+      - qa-prod
+  pull_request:
+
+jobs:
+  tests-and-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install Maven
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y maven
+
+      - name: Run API test JAR
+        run: |
+          java -jar demo-0.0.1-SNAPSHOT.jar &
+          sleep 10 # Allow the server to start
+
+      - name: Run Cucumber tests
+        working-directory: ./api-testing-cucumber
+        run: |
+          mvn clean test
+          sleep 10
+        continue-on-error: true
+
+      - name: Generate Allure report for Cucumber
+        working-directory: ./api-testing-cucumber
+        run: |
+          if [ -d "target" ]; then
+            echo "Target directory exists."
+            echo "Contents of target directory:"
+            ls -R target
+          else
+            echo "Target directory does not exist."
+          fi
+          if [ -d "target/allure-results" ]; then
+            echo "Allure results directory exists."
+            echo "Contents of allure-results directory:"
+            ls -R target/allure-results
+          else
+            echo "Allure results directory does not exist."
+          fi
+          mvn allure:report
+
+      - name: List directories
+        run: |
+          echo "Listing current directory contents:"
+          ls -R .
+          echo "Listing api-testing-cucumber directory contents:"
+          ls -R ./api-testing-cucumber
+          echo "Listing ./api-testing-cucumber/target/allure-results directory contents:"
+          ls -R ./api-testing-cucumber/target/allure-results || echo "Allure results directory not found"
+
+      - name: Combine Allure Results
+        if: always()
+        run: |
+          mkdir -p allure-results
+          cp -r ./api-testing-cucumber/target/allure-results/* allure-results/ || true
+          echo "Combined Results Content:"
+          ls -R allure-results/
+          echo "Total number of result files:"
+          find allure-results -type f | wc -l
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Deploy Allure Report
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          publish_branch: gh-pages
+          force_orphan: true
