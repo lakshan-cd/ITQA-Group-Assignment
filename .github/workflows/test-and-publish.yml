@@ -68,8 +68,17 @@ jobs:
         run: |
           npm ci
           npx playwright install --with-deps
-          npx cucumber-js --format json:allure-results/results.json
+          npm test
         continue-on-error: true
+
+      - name: Debug List directories in UI testing
+        if: always()
+        run: |
+          echo "Listing current directory contents:"
+          ls -R ui-tesing-playwright/allure-results/
+          echo "Listing ui-testing-playwright directory contents:"
+          echo "Number of frontend result files:"
+          find ui-tesing-playwright/allure-results -type f | wc -l
 
       - name: Generate Allure report for Playwright
         working-directory: ./ui-tesing-playwright
@@ -82,15 +91,6 @@ jobs:
                 echo "Allure results directory does not exist."
             fi
             allure generate allure-results --clean
-
-      - name: List directories in UI testing
-        run: |
-          echo "Listing current directory contents:"
-          ls -R .
-          echo "Listing ui-testing-playwright directory contents:"
-          ls -R ./ui-tesing-playwright
-          echo "Listing ./ui-tesing-playwright/allure-results directory contents:"
-          ls -R ./ui-tesing-playwright/allure-results || echo "Allure results directory not found"   
 
       - name: List directories in API testing
         run: |
