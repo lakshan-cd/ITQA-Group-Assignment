@@ -17,13 +17,14 @@ export class AddToWishList {
     this.playWrightConfig = PlaywrightConfig.getInstance();
     this.dataStore = DataStore.getInstance();
   }
-  public async openContextWithAuthentication():Promise <any> {
+  public async openContextWithAuthentication(): Promise<any> {
     this.context = await this.playWrightConfig.getContext();
     await this.context.addCookies([
       {
         name: "singer_session",
         value:
-          "eyJpdiI6Ijg0S1FSdHdkVnplcGtUZmNHUTR6Snc9PSIsInZhbHVlIjoidFhMMlpDeDRRR3VCRUczQUNyVElmbEw4b2ZiaUt4eFlDcmF5dDdlQzhvd0pkY21BMDN2c1FEbDA4RW1YZUNkT21GR1RydXlGaDhZdUhlRHU4S1B6RDh0ZEZ3ZmN3RmFoZXJNVzdVR0E4SGNtL01MT0RocTNwL3dPSGVIcnc3SisiLCJtYWMiOiJlYjJiZWI0N2M1N2Y4YjEwYzMyNTdhYjgxYmNhMDRjMDRjZTI1ZTllYmMzZTQ5ZmNmYjYyYWU5NDU0MWIyYWUwIiwidGFnIjoiIn0%3D",
+          process.env.SINGER_SESSION ||
+          "eyJpdiI6IldNNEpieWhGeTcrRkNQV2ppbml2U2c9PSIsInZhbHVlIjoiN2FWV3NkMGUydXhHYzgxSjZOUU96RTFnUEYvaTU3aVlRVGFOc3ozK1VTMUhOZkZlbWhnZzF4UmpZZmxwUlZGbGoxdUZRZ3Q4WjgybnF3azdKa2d0bUd5dWJXTWMxd0RXcFpSWkFaRXNPS09LcElYbG1Kc21kWDhUZWtlejl1QmgiLCJtYWMiOiIyYjQyOWIyNTc2OTAwOTQ0NWQ1Y2JjODI4MWI2YTcwYzhhMDc1NmIxZmYxYmMyZjM2YjY5ODY4NjMxYjRlNTMxIiwidGFnIjoiIn0%3D",
         domain: "www.singersl.com",
         path: "/",
       },

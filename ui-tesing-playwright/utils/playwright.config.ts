@@ -1,9 +1,9 @@
-import { Browser, BrowserContext, firefox, Page } from 'playwright';
+import { Browser, BrowserContext, firefox, Page } from "playwright";
 
 export class PlaywrightConfig {
   private static instance: PlaywrightConfig;
   private browser: Browser | null = null;
-  private context: BrowserContext | null = null;
+  private defaultContext: BrowserContext | null = null;
   private page: Page | null = null;
   private baseUrl: string = "https://www.singersl.com";
 
@@ -21,40 +21,34 @@ export class PlaywrightConfig {
   // Method to initialize and return the page object
   public async getPage(): Promise<Page> {
     if (!this.browser) {
-      const isHeadless = false; // Check if the environment is CI
+      const isHeadless = process.env.HEADLESS === "true";
       console.log("Launching browser in headless mode:", isHeadless);
       this.browser = await firefox.launch({ headless: isHeadless });
     }
 
-    if (!this.context) {
-        this.context = await this.browser.newContext(
-        //     {
-        // baseURL: this.baseUrl,
-        //     }
-        );
+    if (!this.defaultContext) {
+      this.defaultContext = await this.browser.newContext();
     }
 
     if (!this.page) {
-      this.page = await this.context.newPage();
+      this.page = await this.defaultContext.newPage();
       this.page.setDefaultTimeout(1000 * 60);
       this.page.setDefaultNavigationTimeout(1000 * 60);
-    //   await this.page.goto(this.baseUrl);
     }
 
     return this.page;
   }
 
+  // Method to return a new BrowserContext each time
   public async getContext(): Promise<BrowserContext> {
-
     if (!this.browser) {
-      const isHeadless = false; 
+      const isHeadless = false;
       console.log("Launching browser in headless mode:", isHeadless);
       this.browser = await firefox.launch({ headless: isHeadless });
     }
-    if (!this.context) {
-      this.context = await this.browser.newContext();
-    }
-    return this.context;
+
+    // Always return a new context
+    return await this.browser.newContext();
   }
 
   // Method to close the browser and clean up resources
@@ -64,9 +58,9 @@ export class PlaywrightConfig {
       this.page = null;
     }
 
-    if (this.context) {
-      await this.context.close();
-      this.context = null;
+    if (this.defaultContext) {
+      await this.defaultContext.close();
+      this.defaultContext = null;
     }
 
     if (this.browser) {

@@ -77,6 +77,8 @@ export class ProductComparison {
       .locator(ProductLocators.PRODUCT_PRICE_IN_COMPARE)
       .nth(index)
       .textContent();
+   await this.page.locator(ProductLocators.COMPARE_CLEAR).click();
+    
     return {
       name: name.trim(),
       code: code.trim(),
@@ -85,6 +87,5 @@ export class ProductComparison {
   }
  public async verifyProductDetails(productData:any, productDataInCompare:any):Promise<any>{
    expect(productData).toEqual(productDataInCompare);
-   await this.page.locator(ProductLocators.COMPARE_CLEAR).click();
   }
 }

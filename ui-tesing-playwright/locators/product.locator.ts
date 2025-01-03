@@ -20,5 +20,5 @@ export class ProductLocators {
   public static PRODUCT_NAME_IN_COMPARE: string = "span h2";
   public static PRODUCT_CODE_IN_COMPARE: string = "span .sku";
   public static PRODUCT_PRICE_IN_COMPARE: string = "span .selling-price";
-  public static COMPARE_CLEAR: string = ".use-ajax";
+  public static COMPARE_CLEAR: string = ".use-ajax:has-text('Clear all')";
 }
