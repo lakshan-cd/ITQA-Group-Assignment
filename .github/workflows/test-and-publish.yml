@@ -45,21 +45,25 @@ jobs:
 
       - name: Run Cucumber tests
         working-directory: ./api-testing-cucumber
-        run: mvn clean test
-             sleep 10
-            if [ -d "target" ]; then
+        run: |
+          mvn clean test
+          sleep 10
+          if [ -d "target" ]; then
             echo "Target directory exists."
             echo "Contents of target directory:"
             ls -R target
-            else
+          else
             echo "Target directory does not exist."
-            fi
-            if [ -d "target/allure-results" ]; then
+          fi
+          if [ -d "target/allure-results" ]; then
             echo "Allure results directory exists."
-            else
+            echo "Contents of allure-results directory:"
+            ls -R target/allure-results
+          else
             echo "Allure results directory does not exist."
-            fi
-        continue-on-error: true # Do not fail the job on test failures
+          fi
+        continue-on-error: true
+
 
       - name: Generate Allure report for Cucumber
         working-directory: ./api-testing-cucumber
@@ -77,7 +81,7 @@ jobs:
         if: always()
         run: |
           mkdir -p allure-results
-          cp -r ./api-testing-cucumber/target/allure-results/* allure-results/ || true
+          cp -r api-testing-cucumber/target/allure-results/* allure-results/ || true
           echo "Combined Results Content:"
           ls -R allure-results/
           echo "Total number of result files:"
