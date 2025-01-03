@@ -68,9 +68,7 @@ jobs:
           else
             echo "Allure results directory does not exist."
           fi
-          
-          echo "Folderrr folder Content:"
-          ls -R api-testing-cucumber/
+        
           mvn allure:report
 
   publish-report:
