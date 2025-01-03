@@ -68,7 +68,7 @@ jobs:
         run: |
           npm ci
           npx playwright install --with-deps
-          npm test
+          npx cucumber-js --format json:allure-results/results.json
         continue-on-error: true
 
       - name: Debug List directories in UI testing
