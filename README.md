@@ -76,7 +76,7 @@ To run API tests using Maven and Cucumber, follow these steps:
 
 5. **Open the Allure report**
    ```bash
-   mvn allure:maven
+   mvn allure:serve
    ```
    Launches the Allure report in a browser for analysis.
 
