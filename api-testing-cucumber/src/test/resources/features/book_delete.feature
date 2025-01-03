@@ -16,7 +16,7 @@ Feature: Book DELETE API
 
   Scenario: User cannot delete a book
     Given APIendpoint is "/api/books/{id}"
-    And the book with ID 2 exists in the database
+    And thebook with ID 2 exists in the database
     And BasicAuthentication username is "user" and password is "password"
     And the "user" role does not have permission to delete books
     When I send a DELETE request to "/api/books/2"
@@ -30,7 +30,7 @@ Feature: Book DELETE API
 
   Scenario: Admin cannot delete a book created by user
     Given APIendpoint is "/api/books/{id}"
-    And the book with ID 3 exists in the database
+    And thebook with ID 3 exists in the database
     And BasicAuthentication username is "user" and password is "password"
     And the "admin" role have permission to delete books
     When I send a DELETE request to "/api/books/3"
@@ -46,7 +46,7 @@ Feature: Book DELETE API
 
   Scenario: User cannot delete a book created by admin
     Given APIendpoint is "/api/books/{id}"
-    And the book with ID 4 exists in the database
+    And thebook with ID 4 exists in the database
     And BasicAuthentication username is "user" and password is "password"
     And the "user" role does not have permission to delete books
     When I send a DELETE request to "/api/books/4"
