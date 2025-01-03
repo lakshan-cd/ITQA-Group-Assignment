@@ -6,6 +6,8 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import org.example.itqaassitgnment.utils.APIHelper;
+import org.example.itqaassitgnment.utils.PutFactory;
+import org.example.itqaassitgnment.utils.RequestFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.Assert.*;
@@ -15,7 +17,7 @@ public class BookPutStepDefinitions {
 
     private static final String BASEURL = "http://localhost:7081";
 
-    APIHelper apiHelper = new APIHelper();
+    APIHelper apiHelper = APIHelper.getInstance();
 
     private String endpoint;
     private String requestBody;
@@ -41,12 +43,21 @@ public class BookPutStepDefinitions {
 
     @When("I send a PUT request")
     public void iSendAPutRequest() {
-        response = apiHelper.sendPutRequestWithBasicAuth(endpoint, requestBody, username, password);
+        try {
+            RequestFactory requestFactory = new PutFactory();
+            response = requestFactory.createRequest(endpoint, requestBody, username, password);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send PUT request.");
+        }
     }
 
     @Then("the response status should be {int} for update")
     public void theResponseStatusShouldBeForUpdate(int statusCode) {
-        assertEquals("Unexpected status code", statusCode, response.getStatusCode());
+        try {
+            assertEquals("Unexpected status code", statusCode, response.getStatusCode());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to assert PUT request.");
+        }
     }
 
     @Then("the response should contain for {string} can update a book successfully:")
@@ -93,7 +104,6 @@ public class BookPutStepDefinitions {
         try {
             assertTrue(response.getBody().asString().contains(expectedResponse));
         } catch (Exception e) {
-            e.printStackTrace();
             throw new AssertionError("Failed to compare JSON responses");
         }
     }
