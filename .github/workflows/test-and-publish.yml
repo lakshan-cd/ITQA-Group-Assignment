@@ -86,18 +86,6 @@ jobs:
           echo "Number of frontend result files:"
           find ui-tesing-playwright/allure-results -type f | wc -l
 
-      - name: Generate Allure report for Playwright
-        working-directory: ./ui-tesing-playwright
-        run: |
-            if [ -d "allure-results" ]; then
-                echo "Allure results directory exists."
-                echo "Contents of allure-results directory:"
-                ls -R allure-results
-            else
-                echo "Allure results directory does not exist."
-            fi
-            allure generate allure-results --clean
-
       - name: List directories in API testing
         run: |
           echo "Listing current directory contents:"
