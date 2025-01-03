@@ -25,3 +25,31 @@ Feature: Book DELETE API
       }
       """
     And the book with ID 4 should still exist in the database
+
+    Scenario: Delete a book successfully
+    Given APIendpoint is "/api/books/{id}"
+    And thebook with ID 1 exists in the database
+    And BasicAuthentication username is "user" and password is "password"
+    When I send a DELETE request with the ID 1
+    Then the response status should be 200
+    And the response should contain:
+      """
+      {
+        "message": "Book deleted successfully",
+        "id": 1
+      }
+      """
+
+  Scenario: User cannot delete a book
+    Given APIendpoint is "/api/books/{id}"
+    And thebook with ID 2 exists in the database
+    And BasicAuthentication username is "user" and password is "password"
+    And the "user" role does not have permission to delete books
+    When I send a DELETE request to "/api/books/2"
+    Then the response status should be 200
+    And the response should contain:
+      """
+      {
+        "message": "Book deleted successfully."
+      }
+      """
