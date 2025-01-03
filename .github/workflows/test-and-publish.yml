@@ -86,7 +86,7 @@ jobs:
             echo "Listing api-testing-cucumber directory contents:"
           ls -R ./api-testing-cucumber
           echo "Listing ./api-testing-cucumber/target/allure-results directory contents:"
-          ls -R api-testing-cucumber/target/allure-results || echo "Allure results directory not found"
+          ls -R ./api-testing-cucumber/target/allure-results || echo "Allure results directory not found"
 
       - name: Combine Allure Results
         if: always()
