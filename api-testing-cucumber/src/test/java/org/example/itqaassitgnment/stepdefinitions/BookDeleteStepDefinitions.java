@@ -6,85 +6,65 @@ import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.example.itqaassitgnment.utils.APIHelper;
 import org.junit.Assert;
 
 public class BookDeleteStepDefinitions {
 
     private Response response;
-    private RequestSpecification request;
     private String endpoint;
     private String username;
     private String password;
-    private int bookId; // Declare bookId as a class-level variable to use it across steps
+    private int bookId; // Declare bookId to track the book being tested
+    private final APIHelper apiHelper = new APIHelper(); // Initialize ApiHelper
 
-    @Given("API endpoint is {string}")
+    @Given("api endpoint is {string}")
     public void theApiEndpointIs(String apiEndpoint) {
         this.endpoint = apiEndpoint;
-        RestAssured.baseURI = "http://localhost:8080"; // Ensure base URI is configurable.
-        System.out.println("Base URI set to: " + RestAssured.baseURI);
     }
 
-    @Given("Basic Authentication username is {string} and password is {string}")
+    @Given("Authentication username is {string} and password is {string}")
     public void theBasicAuthenticationUsernameIsAndPasswordIs(String username, String password) {
         this.username = username;
         this.password = password;
-
-        // Initialize request with authentication and content type.
-        this.request = RestAssured.given()
-                .auth()
-                .basic(username, password)
-                .contentType("application/json");
-
-        System.out.println("Request initialized with username: " + username);
     }
 
     @When("I send a DELETE request with the ID {int}")
     public void iSendADeleteRequestWithTheID(int bookId) {
-        this.bookId = bookId; // Store bookId in the class variable
-
-        Assert.assertNotNull("Request object is not initialized. Ensure authentication step is executed.", request);
-
+        this.bookId = bookId; // Track book ID for later validations
         String finalEndpoint = endpoint.replace("{id}", String.valueOf(bookId));
-        System.out.println("Sending DELETE request to endpoint: " + finalEndpoint);
 
-        response = request.when().delete(finalEndpoint);
+        // Use ApiHelper to send the DELETE request
+        response = apiHelper.sendDeleteRequestWithBasicAuth(finalEndpoint, username, password);
 
-        // Log response details for debugging.
+        // Log response details for debugging
         System.out.println("Response Status Code: " + response.getStatusCode());
         System.out.println("Response Body: " + response.getBody().asString());
     }
 
-    @Then("the response status should be {int}")
+    @Then("the response status must be {int}")
     public void theResponseStatusShouldBe(int expectedStatusCode) {
         Assert.assertNotNull("Response is null. Ensure DELETE request was executed.", response);
-
         int actualStatusCode = response.getStatusCode();
-        System.out.println("Validating response status code. Expected: " + expectedStatusCode + ", Actual: " + actualStatusCode);
-
         Assert.assertEquals("Unexpected status code.", expectedStatusCode, actualStatusCode);
     }
 
-    @Then("the response should contain:")
+    @Then("the response should equal to:")
     public void theResponseShouldContain(String expectedBody) {
         Assert.assertNotNull("Response is null. Ensure DELETE request was executed.", response);
-
         String actualBody = response.getBody().asString();
-        System.out.println("Validating response body. Expected to contain: " + expectedBody.trim());
-
-        Assert.assertTrue("Response body does not match expected content.",
+        Assert.assertTrue("Response body does not contain expected content.",
                 actualBody.contains(expectedBody.trim()));
     }
 
-    @Then("the deleted book should no longer exist in the database")
-    public void theDeletedBookShouldNoLongerExistInTheDatabase() {
-        // Additional step to verify deletion by checking the database or API.
-        // Assuming a GET request can verify the book's absence.
+    @Then("the book with ID {int} should still exist in the database")
+    public void theBookShouldStillExistInTheDatabase(int bookId) {
         String checkEndpoint = endpoint.replace("{id}", String.valueOf(bookId));
-        Response checkResponse = RestAssured.given().get(checkEndpoint);
 
-        System.out.println("Verifying book absence. Status Code: " + checkResponse.getStatusCode());
+        // Use ApiHelper to send the GET request with authentication
+        Response checkResponse = apiHelper.sendGetRequestWithBasicAuth(checkEndpoint, username, password);
 
-        Assert.assertEquals("Book still exists in the database. Deletion failed.",
-                404, checkResponse.getStatusCode());
+        Assert.assertEquals("Book does not exist in the database when it should.",
+                200, checkResponse.getStatusCode());
     }
 }
